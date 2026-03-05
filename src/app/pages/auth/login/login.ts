@@ -10,6 +10,7 @@ import { AppStateService } from '../../../core/AppStateService';
 import { LoadingService } from '../../../core/LoadingService';
 import { UserLoginRequest } from '../../../types/UserLoginRequest';
 import { UserSignUpRequest } from '../../../types/UserSignUpRequest';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,7 @@ export class Login {
   Password?: string;
   FullName?: string;
 
-  constructor(public loadingService: LoadingService, private UserAppService: UserAppService) {
+  constructor(public loadingService: LoadingService, private UserAppService: UserAppService, private router: Router) {
   }
 
   ngOnInit() {
@@ -34,7 +35,7 @@ export class Login {
     this.isLogin = !this.isLogin;
   }
 
-  private async login() {
+  async login() {
     this.loadingService.show();
     try {
 
@@ -53,7 +54,7 @@ export class Login {
         showConfirmButton: false
       }).then(() => {
         this.setLocalStrorage('token', result);
-        window.location.href = '/dashboard';
+        this.router.navigate(['/home']);
       });
 
     } catch (err: HttpErrorResponse | any) {
@@ -70,7 +71,7 @@ export class Login {
   }
 
 
-  private async signup() {
+  async signup() {
     this.loadingService.show();
     try {
       const request: UserSignUpRequest = {
@@ -102,7 +103,7 @@ export class Login {
     }
   }
 
-  setLocalStrorage(key: string, value: string) {
+  private setLocalStrorage(key: string, value: string) {
     localStorage.setItem(key, value);
   }
 }
