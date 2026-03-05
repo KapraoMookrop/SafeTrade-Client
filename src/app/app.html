@@ -3,9 +3,9 @@
   <div class="loader"></div>
 </div>
 }
+@if(shouldShowNavbar()) {
 <app-navbar></app-navbar>
+}
 <div class="container-fluid main-content">
-    <div class="max-w-6xl mx-auto p-4 md:p-6">
-      <router-outlet></router-outlet>
-    </div>
+    <router-outlet></router-outlet>
 </div>

@@ -1,0 +1,101 @@
+<div class="container-md d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="card-login">
+
+        <div class="card-header text-center">
+            <div class="text-5xl font-bold text-primary">Safe Trade</div>
+            <div class="text-lg text-muted mt-1">
+                {{ isLogin ? 'ยินดีต้อนรับกลับมา! เข้าสู่ระบบเพื่อเริ่มการซื้อขาย' : 'สร้างบัญชีเพื่อเริ่มต้นใช้งาน' }}
+            </div>
+        </div>
+
+        <div class="card-body px-3 mt-4">
+
+            <!-- LOGIN -->
+            @if(isLogin){
+            <div class="fade-slide">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">
+                        <i class="fa-regular fa-envelope"></i>
+                    </span>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" placeholder="อีเมล" [(ngModel)]="Email">
+                        <label>อีเมล</label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">
+                        <i class="fa-solid fa-key"></i>
+                    </span>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" placeholder="รหัสผ่าน" [(ngModel)]="Password">
+                        <label>รหัสผ่าน</label>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary w-100">เข้าสู่ระบบ</button>
+
+                <div class="text-center mt-3">
+                    <span class="text-muted">ยังไม่มีบัญชี?</span>
+                    <a class="text-primary cursor-pointer" (click)="toggle()"> สมัครสมาชิก</a>
+                </div>
+            </div>
+            }
+
+
+            <!-- REGISTER -->
+            @if(!isLogin){
+            <div class="fade-slide">
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">
+                        <i class="fa-regular fa-user"></i>
+                    </span>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" placeholder="ชื่อ - นามสกุล">
+                        <label>ชื่อ - นามสกุล</label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">
+                        <i class="fa-regular fa-envelope"></i>
+                    </span>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" placeholder="อีเมล">
+                        <label>อีเมล</label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">
+                        <i class="fa-solid fa-key"></i>
+                    </span>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" placeholder="รหัสผ่าน">
+                        <label>รหัสผ่าน</label>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text">
+                        <i class="fa-solid fa-key"></i>
+                    </span>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" placeholder="ยืนยันรหัสผ่าน">
+                        <label>ยืนยันรหัสผ่าน</label>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary w-100">สมัครสมาชิก</button>
+
+                <div class="text-center mt-3">
+                    <span class="text-muted">มีบัญชีแล้ว?</span>
+                    <a class="text-primary cursor-pointer" (click)="toggle()"> เข้าสู่ระบบ</a>
+                </div>
+
+            </div>
+            }
+        </div>
+    </div>
+</div>

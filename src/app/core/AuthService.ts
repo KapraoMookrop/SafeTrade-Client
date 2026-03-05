@@ -1,14 +1,15 @@
 import { Injectable } from "@angular/core";
 import { AppStateService } from "./AppStateService";
+import { UserClientData } from "../types/UserClientData";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
   constructor(private state: AppStateService) {}
 
-  login(response: { token: string; user: any }) {
-    this.state.token.set(response.token);
-    this.state.user.set(response.user);
+  login(token: string, user: UserClientData) {
+    this.state.token.set(token);
+    this.state.user.set(user);
   }
 
   logout() {

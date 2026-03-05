@@ -3,11 +3,13 @@ import { Home } from './pages/home/home';
 import { Chat } from './pages/chat/chat';
 import { Profile } from './pages/profile/profile';
 import { Tracking } from './pages/tracking/tracking';
+import { Login } from './pages/auth/login/login';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     { path: 'home', component: Home },
     { path: 'chat', component: Chat },
     { path: 'tracking', component: Tracking },
-    { path: 'profile', component: Profile }
+    { path: 'profile', component: Profile },
+    { path: 'login', component: Login }
 ];

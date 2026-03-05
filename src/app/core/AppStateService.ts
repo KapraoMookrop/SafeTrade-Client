@@ -1,4 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
+import { UserClientData } from '../types/UserClientData';
 
 export interface User {
   id: string;
@@ -10,7 +11,7 @@ export interface User {
 export class AppStateService {
 
   // ===== GLOBAL STATE =====
-  user = signal<User | null>(null);
+  user = signal<UserClientData | null>(null);
   token = signal<string | null>(null);
   isLoading = signal(false);
   walletBalance = signal<number>(0);

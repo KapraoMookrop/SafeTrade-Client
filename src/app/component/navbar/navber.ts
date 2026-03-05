@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AppService } from '../../API/AppService';
 import Swal from 'sweetalert2';
 import { AppStateService } from '../../core/AppStateService';
 import { LoadingService } from '../../core/LoadingService';
