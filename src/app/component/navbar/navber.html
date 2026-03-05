@@ -1,6 +1,6 @@
-<div class="container-fluid d-none d-md-flex">
-    <div class="nav container-md d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center gap-2">
+<div class="nav container-fluid d-none d-md-flex">
+    <div class="container-md d-flex justify-content-between align-items-center">
+        <div class="nav-menu">
             <div class="navbar-brand">
                 <a class="d-flex align-items-center text-decoration-none">
                     <img src="" class="me-2" alt="logo">
@@ -24,41 +24,42 @@
         </div>
         <div class="d-flex gap-3 justify-content-end align-items-center">
             <div class="nav-item">
-                <div class="dropdown">
-                    <div class="notify" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-regular fa-bell"></i>
+                <a class="profile" routerLink="/profile" routerLinkActive="active">
+                    <div class="profile-img">
+                        <span>C</span>
                     </div>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" href="#">Action</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#">Another action</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </li>
-                    </ul>
-                </div>
+                    <span class="profile-name">Chatchawan</span>
+                </a>
             </div>
-            <div class="nav-item">
-                <div class="dropdown">
-                    <div class="notify" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-regular fa-bell"></i>
-                    </div>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" href="#">Action</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#">Another action</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+        </div>
+    </div>
+</div>
+
+<div class="nav-mobile container-fluid d-md-none d-flex">
+    <div class="nav-menu">
+        <div class="nav-item">
+            <a routerLink="/home" routerLinkActive="active">
+                <i class="fa-solid fa-house-chimney"></i>
+                <div>หน้าหลัก</div>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a routerLink="/chat" routerLinkActive="active">
+                <i class="fa-regular fa-comment-dots"></i>
+                <div>แชท/ดีล</div>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a routerLink="/tracking" routerLinkActive="active">
+                <i class="fa-solid fa-truck"></i>
+                <div>ติดตามพัสดุ</div>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a routerLink="/profile" routerLinkActive="active">
+                <i class="fa-solid fa-user"></i>
+                <div>โปรไฟล์</div>
+            </a>
         </div>
     </div>
 </div>

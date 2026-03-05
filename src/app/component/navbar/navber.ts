@@ -25,7 +25,6 @@ export class Navbar implements OnInit {
   constructor(private stateService: AppStateService, private loadingService: LoadingService, private authAppService: AuthService ) { }
 
   ngOnInit() {
-    
   }
 
 }
