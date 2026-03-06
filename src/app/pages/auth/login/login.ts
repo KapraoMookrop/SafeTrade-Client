@@ -19,9 +19,9 @@ import { Router } from '@angular/router';
   templateUrl: './login.html',
 })
 export class Login {
-  Email?: string;
-  Password?: string;
-  FullName?: string;
+  UserLoginRequest: UserLoginRequest = {} as UserLoginRequest;
+  UserSignUpRequest: UserSignUpRequest = {} as UserSignUpRequest;
+  ConfirmPassword?: string;
 
   constructor(public loadingService: LoadingService, private UserAppService: UserAppService, private router: Router) {
   }
@@ -38,13 +38,7 @@ export class Login {
   async login() {
     this.loadingService.show();
     try {
-
-      const request: UserLoginRequest = {
-        Email: this.Email || '',
-        Password: this.Password || ''
-      }
-
-      const result = await this.UserAppService.Login(request);
+      const result = await this.UserAppService.Login(this.UserLoginRequest);
 
       Swal.fire({
         icon: 'success',
@@ -70,17 +64,23 @@ export class Login {
     }
   }
 
+  step = 1;
+  nextStep() {
+    if (this.step < 3) {
+      this.step++;
+    }
+  }
+
+  prevStep() {
+    if (this.step > 1) {
+      this.step--;
+    }
+  }
 
   async signup() {
     this.loadingService.show();
     try {
-      const request: UserSignUpRequest = {
-        FullName: this.FullName || '',
-        Email: this.Email || '',
-        Password: this.Password || ''
-      };
-
-      await this.UserAppService.Signup(request);
+      await this.UserAppService.Signup(this.UserSignUpRequest);
 
       Swal.fire({
         icon: 'success',
