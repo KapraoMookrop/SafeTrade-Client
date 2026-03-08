@@ -52,7 +52,7 @@ export class Login {
         timer: 1500,
         showConfirmButton: false
       }).then(() => {
-        this.setLocalStrorage('token', result);
+        this.setLocalStrorage('token', result.JWT);
         this.router.navigate(['/home']);
       });
 
@@ -161,7 +161,7 @@ export class Login {
   async Signup() {
     this.loadingService.show();
     try {
-      // await this.UserAppService.Signup(this.UserSignUpRequest);
+      await this.UserAppService.Signup(this.UserSignUpRequest);
 
       Swal.fire({
         icon: 'success',
@@ -250,20 +250,26 @@ export class Login {
   }
 
   async FindDistrict(provinceId: string) {
+    this.loadingService.show();
     try {
       const result = await this.CoreAppService.GetDistricts(provinceId);
       this.DistrictDatas = result;
     } catch (err) {
       Swal.fire('Error', 'เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ', 'error');
+    } finally {
+      this.loadingService.hide();
     }
   }
 
   async FindSubDistrict(districtId: string) {
+    this.loadingService.show();
     try {
       const result = await this.CoreAppService.GetSubDistricts(districtId);
       this.SubDistrictDatas = result;
     } catch (err) {
       Swal.fire('Error', 'เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ', 'error');
+    } finally {
+      this.loadingService.hide();
     }
   }
 

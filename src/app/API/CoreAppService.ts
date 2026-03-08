@@ -40,4 +40,15 @@ export class CoreAppService {
         const response = await lastValueFrom(observable);
         return response;
     }
+
+    
+    async VerifyEmail(verifyToken: string): Promise<void> {
+
+        const observable = this.http.get<void>(
+            `${this.baseUrl}/api/core/VerifyEmail?verifyToken=${verifyToken}`
+        );
+
+        const response = await lastValueFrom(observable);
+        return response;
+    }
 }

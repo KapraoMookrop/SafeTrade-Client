@@ -1,10 +1,11 @@
 import { Component, HostListener, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterOutlet } from "@angular/router";
+import { NavigationEnd, Router, RouterOutlet } from "@angular/router";
 import { Navbar } from './component/navbar/navber';
 import { AppStateService } from './core/AppStateService';
 import { UserClientData } from './types/UserClientData';
 import { AuthService } from './core/AuthService';
+import { filter } from 'rxjs/internal/operators/filter';
 
 @Component({
   selector: 'app-root',
@@ -18,14 +19,23 @@ export class App {
 
   constructor(public authService: AuthService, public stateService: AppStateService, public router: Router) { }
 
-  hideNavbarRoutes = ['/login', '/register'];
+  showNavbarRoutes = ['/home', '/chat'];
 
   shouldShowNavbar() {
-    return !this.hideNavbarRoutes.includes(this.router.url);
+    return this.showNavbarRoutes.includes(this.router.url);
   }
 
   ngOnInit() {
-    this.loadUserFromToken();
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
+        const url = event.urlAfterRedirects;
+
+        if (url.startsWith('/verify-email')) {
+          return;
+        }
+
+        this.loadUserFromToken();
+
+      });
   }
 
   loadUserFromToken() {
