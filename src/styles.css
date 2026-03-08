@@ -265,6 +265,7 @@ body {
 }
 
 .card-login .bg-img {
+  pointer-events: none;
   width: fit-content;
   position: absolute;
   top: 60%;
@@ -654,6 +655,10 @@ body {
     transform: rotate(8deg);
     color: var(--bg-main);
     opacity: 0.2;
+  }
+
+  .card-login .bg-img {
+    transform: translate(-50%, -50%) scale(14);
   }
 
   .text-xs {
