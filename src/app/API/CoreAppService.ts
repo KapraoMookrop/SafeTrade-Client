@@ -12,8 +12,8 @@ import { DistrictData } from '../types/DistrictData';
 })
 export class CoreAppService {
 
-    // private baseUrl = 'https://tron-project-backend.vercel.app';
-    private baseUrl = 'http://localhost:3000';
+    private baseUrl = 'https://safe-trade-server.vercel.app';
+    // private baseUrl = 'http://localhost:3000';
 
     constructor(private http: HttpClient) { }
     async GetProvinces(): Promise<ProvinceData[]> {

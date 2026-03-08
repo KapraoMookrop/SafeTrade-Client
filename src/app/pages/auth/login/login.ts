@@ -86,7 +86,7 @@ export class Login {
           })
           return;
         }
-        
+
         if (!this.UserSignUpRequest.Email || !this.UserSignUpRequest.Password || !this.ConfirmPassword) {
           Swal.fire({
             toast: true,
@@ -161,12 +161,12 @@ export class Login {
   async Signup() {
     this.loadingService.show();
     try {
-      await this.UserAppService.Signup(this.UserSignUpRequest);
+      // await this.UserAppService.Signup(this.UserSignUpRequest);
 
       Swal.fire({
         icon: 'success',
         title: 'สมัครสมาชิกสำเร็จ',
-        text: 'สามารถเข้าสู่ระบบได้ทันที',
+        text: 'กรุณาตรวจสอบอีเมลเพื่อยืนยันบัญชีของคุณ',
       });
 
       this.isLogin = true;
