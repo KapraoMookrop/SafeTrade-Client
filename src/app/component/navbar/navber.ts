@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { AppStateService } from '../../core/AppStateService';
 import { LoadingService } from '../../core/LoadingService';
 import { AuthService } from '../../core/AuthService';
+import { UserClientData } from '../../types/UserClientData';
 
 @Component({
   selector: 'app-navbar',
@@ -14,12 +15,7 @@ import { AuthService } from '../../core/AuthService';
   templateUrl: './navber.html',
 })
 export class Navbar implements OnInit {
-  dialogLoginVisible = false;
-  dialogSignupVisible = false;
-  dialogTranVisible = false;
-  token?: string;
-  tron_address?: string;
-  username?: string;
+  User: UserClientData = {} as UserClientData;
 
   constructor(private stateService: AppStateService, private loadingService: LoadingService, private authAppService: AuthService ) { }
 

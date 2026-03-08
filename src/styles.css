@@ -276,6 +276,7 @@ body {
 
 .card-login .card-body.is-sign-up {
   height: 600px;
+  max-height: 60vh;
   position: relative;
   z-index: 1;
 }

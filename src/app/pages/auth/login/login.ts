@@ -5,6 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { UserAppService } from '../../../API/UserAppService';
 import Swal from 'sweetalert2';
 import { LoadingService } from '../../../core/LoadingService';
+import { AuthService } from '../../../core/AuthService';
 import { UserLoginRequest } from '../../../types/UserLoginRequest';
 import { UserSignUpDataRequest } from '../../../types/UserSignUpDataRequest';
 import { Router } from '@angular/router';
@@ -13,6 +14,7 @@ import { CoreAppService } from '../../../API/CoreAppService';
 import { ProvinceData } from '../../../types/ProvinceData';
 import { DistrictData } from '../../../types/DistrictData';
 import { SubDistrictData } from '../../../types/SubDistrictData';
+import { UserClientData } from '../../../types/UserClientData';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +28,7 @@ export class Login {
   ConfirmPassword?: string;
 
   constructor(public loadingService: LoadingService,
+    private AuthService: AuthService,
     private UserAppService: UserAppService,
     private CoreAppService: CoreAppService,
     private router: Router) {
@@ -44,7 +47,10 @@ export class Login {
     this.loadingService.show();
     try {
       const result = await this.UserAppService.Login(this.UserLoginRequest);
-
+      const ClientUser : UserClientData = {
+        FullName: result.FullName
+      };
+      this.AuthService.login(result.JWT, ClientUser);
       Swal.fire({
         icon: 'success',
         title: 'เข้าสู่ระบบสำเร็จ',

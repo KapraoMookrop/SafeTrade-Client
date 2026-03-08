@@ -19,7 +19,7 @@ export class App {
 
   constructor(public authService: AuthService, public stateService: AppStateService, public router: Router) { }
 
-  showNavbarRoutes = ['/home', '/chat'];
+  showNavbarRoutes = ['/home', '/chat', '/tracking', '/profile'];
 
   shouldShowNavbar() {
     return this.showNavbarRoutes.includes(this.router.url);
