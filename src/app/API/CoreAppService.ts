@@ -3,8 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth.interceptor';
-import { UserLoginRequest } from '../types/UserLoginRequest';
-import { UserSignUpDataRequest } from '../types/UserSignUpDataRequest';
 import { ProvinceData } from '../types/ProvinceData';
 import { SubDistrictData } from '../types/SubDistrictData';
 import { DistrictData } from '../types/DistrictData';
@@ -12,28 +10,33 @@ import { DistrictData } from '../types/DistrictData';
 @Injectable({
     providedIn: 'root'
 })
-export class UserAppService {
+export class CoreAppService {
 
     // private baseUrl = 'https://tron-project-backend.vercel.app';
     private baseUrl = 'http://localhost:3000';
 
     constructor(private http: HttpClient) { }
-    async Login(request: UserLoginRequest): Promise<string> {
-
-        const observable = this.http.post<string>(
-            `${this.baseUrl}/api/users/Login`, request
+    async GetProvinces(): Promise<ProvinceData[]> {
+        const observable = this.http.get<ProvinceData[]>(
+            `${this.baseUrl}/api/core/GetProvinces`
         );
 
         const response = await lastValueFrom(observable);
         return response;
     }
 
-    async Signup(request: UserSignUpDataRequest): Promise<void> {
-
-        const observable = this.http.post<void>(
-            `${this.baseUrl}/api/users/SignUp`, request
+    async GetDistricts(provinceId: string): Promise<DistrictData[]> {
+        const observable = this.http.get<DistrictData[]>(
+            `${this.baseUrl}/api/core/GetDistricts?provinceId=${provinceId}`
         );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
 
+    async GetSubDistricts(districtId: string): Promise<SubDistrictData[]> {
+        const observable = this.http.get<SubDistrictData[]>(
+            `${this.baseUrl}/api/core/GetSubDistricts?districtId=${districtId}`
+        );
         const response = await lastValueFrom(observable);
         return response;
     }

@@ -1,6 +1,17 @@
 <div class="container-md d-flex justify-content-center align-items-center" style="height: 100vh;">
     <div class="card-login">
-
+        @if(!isLogin){
+        <div class="bg-img">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-shield-check w-80 h-80" aria-hidden="true">
+                <path
+                    d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z">
+                </path>
+                <path d="m9 12 2 2 4-4"></path>
+            </svg>
+        </div>
+        }
         <div class="card-header text-center">
             <div class="text-5xl font-bold text-primary">Safe Trade</div>
             <div class="text-lg text-muted mt-1">
@@ -8,8 +19,7 @@
             </div>
         </div>
 
-        <div class="card-body px-3 mt-4">
-
+        <div class="card-body px-3 mt-4" [class.is-sign-up]="!isLogin">
             <!-- LOGIN -->
             @if(isLogin){
             <div class="fade-slide">
@@ -18,7 +28,8 @@
                         <i class="fa-regular fa-envelope"></i>
                     </span>
                     <div class="form-floating">
-                        <input type="email" class="form-control" placeholder="อีเมล" [(ngModel)]="UserLoginRequest.Email" name="email">
+                        <input type="email" class="form-control" placeholder="อีเมล"
+                            [(ngModel)]="UserLoginRequest.Email" name="email">
                         <label for="email">อีเมล</label>
                     </div>
                 </div>
@@ -28,16 +39,10 @@
                         <i class="fa-solid fa-key"></i>
                     </span>
                     <div class="form-floating">
-                        <input type="password" class="form-control" placeholder="รหัสผ่าน" [(ngModel)]="UserLoginRequest.Password" name="password">
+                        <input type="password" class="form-control" placeholder="รหัสผ่าน"
+                            [(ngModel)]="UserLoginRequest.Password" name="password">
                         <label for="password">รหัสผ่าน</label>
                     </div>
-                </div>
-
-                <button class="btn btn-primary w-100" (click)="login()">เข้าสู่ระบบ</button>
-
-                <div class="text-center mt-3">
-                    <span class="text-muted">ยังไม่มีบัญชี?</span>
-                    <a class="text-primary cursor-pointer" (click)="toggle()"> สมัครสมาชิก</a>
                 </div>
             </div>
             }
@@ -47,56 +52,23 @@
             @if(!isLogin){
             <div>
                 <h3 class="mb-1">สมัครสมาชิกใหม่</h3>
-                <small class="text-muted">ขั้นตอนที่ {{step}} จาก 3</small>
                 <div class="d-flex align-items-center justify-content-between my-4">
-                    <div class="step" [class.active]="step >= 1">1</div>
-                    <div class="line"></div>
-                    <div class="step" [class.active]="step >= 2">2</div>
-                    <div class="line"></div>
-                    <div class="step" [class.active]="step >= 3">3</div>
+                    <div class="step" [class.active]="step >= 1">
+                        <div class="step-icon">1</div>
+                        <div class="text-sm">ข้อมูลบัญชี</div>
+                    </div>
+                    <div class="step" [class.active]="step >= 2">
+                        <div class="step-icon">2</div>
+                        <div class="text-sm">ข้อมูลส่วนตัว</div>
+                    </div>
+                    <div class="step" [class.active]="step >= 3">
+                        <div class="step-icon">3</div>
+                        <div class="text-sm">ยืนยันการสมัคร</div>
+                    </div>
                 </div>
 
                 <!-- STEP 1 -->
                 @if(step === 1){
-                <div class="fade-slide">
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">
-                            <i class="fa-regular fa-user"></i>
-                        </span>
-
-                        <div class="form-floating">
-                            <input type="text" class="form-control" placeholder="ชื่อ-นามสกุล" [(ngModel)]="UserSignUpRequest.FullName" name="fullName">
-                            <label for="fullName">ชื่อ-นามสกุล</label>
-                        </div>
-                    </div>
-
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">
-                            <i class="fa-solid fa-phone"></i>
-                        </span>
-
-                        <div class="form-floating">
-                            <input type="text" class="form-control" placeholder="เบอร์โทรศัพท์" [(ngModel)]="UserSignUpRequest.Phone" name="phone">
-                            <label for="phone">เบอร์โทรศัพท์</label>
-                        </div>
-                    </div>
-
-                    <div class="form-floating mb-3">
-                        <textarea class="form-control" [(ngModel)]="UserSignUpRequest.Address" placeholder="ที่อยู่" name="address"></textarea>
-                        <label for="address">ที่อยู่สำหรับการจัดส่ง</label>
-                    </div>
-
-                    <button class="btn btn-primary w-100" (click)="nextStep()">
-                        ถัดไป
-                    </button>
-
-                </div>
-
-                }
-
-                <!-- STEP 2 -->
-                @if(step === 2){
-
                 <div class="fade-slide">
 
                     <div class="input-group mb-3">
@@ -105,7 +77,8 @@
                         </span>
 
                         <div class="form-floating">
-                            <input type="email" class="form-control" placeholder="อีเมล" [(ngModel)]="UserSignUpRequest.Email" name="email">
+                            <input type="email" class="form-control" placeholder="อีเมล"
+                                [(ngModel)]="UserSignUpRequest.Email" name="email">
                             <label for="email">อีเมล</label>
                         </div>
                     </div>
@@ -116,7 +89,8 @@
                         </span>
 
                         <div class="form-floating">
-                            <input type="password" class="form-control" placeholder="รหัสผ่าน" [(ngModel)]="UserSignUpRequest.Password" name="password">
+                            <input type="password" class="form-control" placeholder="รหัสผ่าน"
+                                [(ngModel)]="UserSignUpRequest.Password" name="password">
                             <label for="password">รหัสผ่าน</label>
                         </div>
                     </div>
@@ -127,42 +101,164 @@
                         </span>
 
                         <div class="form-floating">
-                            <input type="password" class="form-control" placeholder="ยืนยันรหัสผ่าน" [(ngModel)]="ConfirmPassword" name="confirmPassword">
+                            <input type="password" class="form-control" placeholder="ยืนยันรหัสผ่าน"
+                                [(ngModel)]="ConfirmPassword" name="confirmPassword">
                             <label for="confirmPassword">ยืนยันรหัสผ่าน</label>
                         </div>
                     </div>
+                </div>
+                }
+                <!-- STEP 2 -->
+                @if(step === 2){
+                <div class="fade-slide">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">
+                            <i class="fa-regular fa-user"></i>
+                        </span>
 
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-secondary w-50" (click)="prevStep()">ย้อนกลับ</button>
-                        <button class="btn btn-primary w-50" (click)="nextStep()">ถัดไป</button>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" placeholder="ชื่อ-นามสกุล"
+                                [(ngModel)]="UserSignUpRequest.FullName" name="fullName">
+                            <label for="fullName">ชื่อ-นามสกุล</label>
+                        </div>
                     </div>
 
-                </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">
+                            <i class="fa-solid fa-phone"></i>
+                        </span>
 
+                        <div class="form-floating">
+                            <input type="text" class="form-control" placeholder="เบอร์โทรศัพท์"
+                                [(ngModel)]="UserSignUpRequest.Phone" name="phone">
+                            <label for="phone">เบอร์โทรศัพท์</label>
+                        </div>
+                    </div>
+
+                    <div class="my-3">
+                        <textarea class="form-control" placeholder="ที่อยู่ เช่น บ้านเลขที่, ซอย และ หมู่"
+                            [(ngModel)]="UserSignUpRequest.AddressInfo" name="address"></textarea>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div class="w-100">
+                            <ng-select [items]="ProvinceDatas" bindLabel="Name_TH" [searchable]="true"
+                                [clearable]="true" [(ngModel)]="selectedProvince" placeholder="เลือกจังหวัด">
+                                <ng-template ng-option-tmp let-item="item">
+                                    <div class="d-flex flex-column">
+                                        <div>{{ item.Name_TH }}</div>
+                                    </div>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                        <div class="w-100">
+                            <ng-select [items]="DistrictDatas" bindLabel="Name_TH" [searchable]="true"
+                                [clearable]="true" [(ngModel)]="selectedDistrict" placeholder="เลือกอำเภอ"
+                                [disabled]="!selectedProvince">
+                                <ng-template ng-option-tmp let-item="item">
+                                    <div class="d-flex flex-column">
+                                        <div>{{ item.Name_TH }}</div>
+                                    </div>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div class="w-100">
+                            <ng-select [items]="SubDistrictDatas" bindLabel="Name_TH" [searchable]="true"
+                                [clearable]="true" [(ngModel)]="selectedSubDistrict" placeholder="เลือกตำบล"
+                                [disabled]="!selectedDistrict">
+                                <ng-template ng-option-tmp let-item="item">
+                                    <div class="d-flex flex-column">
+                                        <div>{{ item.Name_TH }}</div>
+                                    </div>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+
+                        <div class="w-100">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" placeholder="รหัสไปษณีย์"
+                                    [(ngModel)]="UserSignUpRequest.ZipCode" name="zipcode">
+                                <label for="zipcode">รหัสไปษณีย์</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 }
 
                 <!-- STEP 3 -->
                 @if(step === 3){
 
-                <div class="fade-slide text-center">
-
-                    <h5 class="mb-3">ตรวจสอบข้อมูล</h5>
-
-                    <p><b>ชื่อ:</b> {{UserSignUpRequest.FullName}}</p>
-                    <p><b>เบอร์:</b> {{UserSignUpRequest.Phone}}</p>
-                    <p><b>อีเมล:</b> {{UserSignUpRequest.Email}}</p>
-                    <p><b>ที่อยู่:</b> {{UserSignUpRequest.Address}}</p>
-
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-secondary w-50" (click)="prevStep()">ย้อนกลับ</button>
-                        <button class="btn btn-primary w-50" (click)="signup()">สมัครสมาชิก</button>
+                <div class="fade-slide">
+                    <div class="sub-card">
+                        <div class="sub-card-header text-base">
+                            ข้อมูลบัญชี
+                        </div>
+                        <div class="sub-card-body mt-3">
+                            <div class="d-flex gap-2 align-items-center">
+                                <span class="text-sm text-muted col-3">อีเมล : </span>
+                                <span class="text-sm text-bold col-9">{{ UserSignUpRequest.Email }}</span>
+                            </div>
+                        </div>
                     </div>
 
+                    <div class="sub-card mt-3">
+                        <div class="sub-card-header text-base">
+                            ข้อมูลส่วนตัว
+                        </div>
+                        <div class="sub-card-body mt-3">
+                            <div class="d-flex gap-2 my-2">
+                                <span class="text-sm text-muted col-3">ชื่อ - นามสกุล : </span>
+                                <span class="text-sm text-bold col-9">{{ UserSignUpRequest.FullName }}</span>
+                            </div>
+                            <div class="d-flex gap-2 my-2">
+                                <span class="text-sm text-muted col-3">เบอร์โทร : </span>
+                                <span class="text-sm text-bold col-9">{{ UserSignUpRequest.Phone }}</span>
+                            </div>
+                            <div class="d-flex gap-3 my-2">
+                                <div class="d-flex gap-2">
+                                    <span class="text-sm text-muted col-3">ที่อยู่ : </span>
+                                    <span class="text-sm text-bold col-9">
+                                        {{ UserSignUpRequest.AddressInfo }}
+                                        ตำบล {{ selectedSubDistrict?.Name_TH }},
+                                        อำเภอ {{ selectedDistrict?.Name_TH }},
+                                        จังหวัด {{ selectedProvince?.Name_TH }},
+                                        รหัสไปษณีย์ {{UserSignUpRequest.ZipCode}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
+                <div class="text-danger text-sm mt-2">
+                    <span>*ระบบจะส่งลิงก์สำหรับยืนยันตัวตนไปยังอีเมลที่คุณได้ลงทะเบียนไว้</span>
+                </div>
                 }
             </div>
             }
+        </div>
+        <div class="card-footer">
+            @if(isLogin){
+            <button class="btn btn-primary w-100" (click)="Login()">เข้าสู่ระบบ</button>
+
+            <div class="text-center mt-3">
+                <span class="text-muted">ยังไม่มีบัญชี?</span>
+                <a class="text-primary cursor-pointer" (click)="toggle()"> สมัครสมาชิก</a>
+            </div>
+            }@else {
+            <div class="d-flex justify-content-center gap-2">
+                @if(step != 1){
+                <button class="btn btn-secondary w-50" (click)="prevStep()">ย้อนกลับ</button>
+                }
+                @if(step == 3){
+                <button class="btn btn-primary w-50" (click)="Signup()">สมัครสมาชิก</button>
+                }@else {
+                <button class="btn btn-primary w-50" (click)="nextStep()">ถัดไป</button>
+                }
+            </div>
+            }
+
         </div>
     </div>
 </div>

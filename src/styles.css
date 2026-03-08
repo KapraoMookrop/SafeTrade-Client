@@ -125,7 +125,6 @@ body {
   }
 }
 
-
 .nav {
   padding: 24px 0px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -262,6 +261,48 @@ body {
   padding: 24px;
   width: 80vw;
   max-width: 500px;
+  position: relative;
+}
+
+.card-login .bg-img {
+  width: fit-content;
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(18);
+  color: var(--primary);
+  opacity: 0.1;
+}
+
+.card-login .card-body.is-sign-up {
+  height: 600px;
+  position: relative;
+  z-index: 1;
+}
+
+.card-login .form-control {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.card-login textarea.form-control {
+  padding-top: 12px;
+}
+
+.sub-card {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.sub-card .sub-card-header {
+  padding-bottom: 12px;
+  border-bottom: 1px solid;
+  border-color: rgba(0, 0, 0, 0.3);
 }
 
 .text-xs {
@@ -359,7 +400,7 @@ body {
 
 .form-control {
   border-radius: 20px;
-  background-color: var(--bg-input);
+  background-color: var(--bg-main);
   border: 1px solid #d1d5db;
   transition: all 0.3s ease;
 }
@@ -443,7 +484,6 @@ body {
   color: var(--text-main) !important;
 }
 
-/* 5. Icons Customization */
 .swal2-icon.swal2-success {
   border-color: var(--primary) !important;
   color: var(--primary) !important;
@@ -467,11 +507,6 @@ body {
   color: var(--status-warning) !important;
 }
 
-.swal2-backdrop-show {
-  background: rgba(0, 0, 0, 0.5) !important;
-  backdrop-filter: blur(4px) !important;
-}
-
 .swal2-input {
   border-radius: 20px !important;
   background-color: var(--bg-input) !important;
@@ -485,7 +520,62 @@ body {
   outline: none !important;
 }
 
+.ng-select .ng-select-container {
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  padding: 0 12px;
+}
+
+.ng-select .ng-select-container .ng-value-container .ng-input {
+  padding: 0 12px;
+}
+
+.ng-select .ng-placeholder {
+  color: var(--text-muted);
+}
+
+.ng-select .ng-value {
+  color: var(--text-main);
+}
+
+.ng-select.ng-select-focused .ng-select-container:after {
+  border-bottom: thin solid var(--primary) !important;
+}
+
+.ng-select.ng-select-focused .ng-select-container .ng-arrow-wrapper .ng-arrow {
+  color: var(--primary) !important;
+}
+
+.ng-select.ng-select-focused .ng-select-container .ng-placeholder {
+  color: var(--primary) !important;
+}
+
+.ng-dropdown-panel {
+  background-color: var(--bg-main);
+}
+
+.ng-dropdown-panel .ng-option:hover {
+  background-color: var(--primary-light);
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--primary);
+}
+
 .step {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  color: var(--text-muted);
+}
+
+.step.active {
+  color: var(--primary);
+}
+
+.step .step-icon {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -496,15 +586,9 @@ body {
   font-weight: bold;
 }
 
-.step.active {
+.step.active .step-icon {
   background: var(--primary);
   color: var(--bg-main);
-}
-
-.line {
-  flex: 1;
-  height: 2px;
-  background: var(--bg-main);
 }
 
 @media (max-width: 1000px) {
