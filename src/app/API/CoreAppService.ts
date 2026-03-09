@@ -41,7 +41,7 @@ export class CoreAppService {
         return response;
     }
 
-    
+
     async VerifyEmail(verifyToken: string): Promise<void> {
 
         const observable = this.http.get<void>(
@@ -55,6 +55,15 @@ export class CoreAppService {
     async Enable2FA(): Promise<{ qr: string; secret: string; }> {
         const observable = this.http.post<{ qr: string; secret: string; }>(
             `${this.baseUrl}/api/core/Enable2FA`,
+            {}
+        );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
+
+    async Disable2FA(): Promise<void> {
+        const observable = this.http.post<void>(
+            `${this.baseUrl}/api/core/Disable2FA`,
             {}
         );
         const response = await lastValueFrom(observable);

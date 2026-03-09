@@ -1,3 +1,105 @@
 <div class="container-md">
-    <h1>Profile</h1>
+    <img [src]="qr" alt="QR Code">
+    <button class="btn" (click)="Enable2FA()">เปิด 2FA</button>
+</div>
+
+<div class="container-md text-center">
+    <div class="card-profile">
+        <div class="card-header">
+            <div class="profile-img text-5xl">
+                {{getLogoUser()}}
+            </div>
+            <div class="mt-3 d-flex justify-content-center flex-column align-items-center gap-1">
+                <div class="text-4xl text-medium">{{stateService.user()?.FullName}}</div>
+                <div class="profile-role">
+                    <span class="text-xs">
+                        {{stateService.user()?.Role == "BUYER" ? "บัญชีผู้ซื้อ" : "บัญชีผู้ขาย"}}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="text-start">
+                <span class="text-2xl">สถานะและความปลอดภัย</span>
+                <div class="d-flex justify-content-between setting-item">
+                    <div class="d-flex align-items-center gap-4">
+                        <div class="text-4xl text-muted icon-item">
+                            <i class="fa-solid fa-universal-access"></i>
+                        </div>
+                        <div>
+                            <div class="text-xl">
+                                การยืนยันตัวตนผู้ขาย
+                            </div>
+                            <div class="text-sm">
+                                ต้องยืนยันตัวตนก่อนเพื่อเริ่มเป็นผู้ขาย
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary">สมัครเป็นผู้ขาย</button>
+                </div>
+
+                <div class="d-flex justify-content-between setting-item">
+                    <div class="d-flex align-items-center gap-4">
+                        <div class="text-4xl text-muted icon-item">
+                            <i class="fa-solid fa-universal-access"></i>
+                        </div>
+                        <div>
+                            <div class="text-xl">
+                                การยืนยันตัวตน 2 ชั้น (2FA)
+                            </div>
+                            <div class="text-sm">
+                                แนะนำให้เปิดเพื่อความปลอดภัย
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="switchCheckChecked"
+                            [checked]="stateService.user()?.IsEnabled2FA" (click)="Toggle2FA($event)">
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-danger mt-2" (click)="LogOut()">ออกจากระบบ</button>
+            <!-- <div class="grid sm:grid-cols-2 gap-4 font-kanit">
+                <button
+                    class="flex items-center gap-4 p-5 rounded-2xl border border-gray-50 hover:bg-gray-50 transition-all text-left group">
+                    <div
+                        class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-credit-card w-6 h-6" aria-hidden="true">
+                            <rect width="20" height="14" x="2" y="5" rx="2"></rect>
+                            <line x1="2" x2="22" y1="10" y2="10"></line>
+                        </svg>
+                    </div>
+                    <div class="flex-1"><span
+                            class="font-bold text-gray-700 block text-sm">กระเป๋าเงินและธนาคาร</span><span
+                            class="text-[10px] text-gray-400 italic">จัดการบัญชีรับเงิน</span></div><svg
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-chevron-right w-5 h-5 text-gray-300" aria-hidden="true">
+                        <path d="m9 18 6-6-6-6"></path>
+                    </svg>
+                </button><button
+                    class="flex items-center gap-4 p-5 rounded-2xl border border-gray-50 hover:bg-gray-50 transition-all text-left group">
+                    <div
+                        class="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-log-out w-6 h-6" aria-hidden="true">
+                            <path d="m16 17 5-5-5-5"></path>
+                            <path d="M21 12H9"></path>
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        </svg>
+                    </div>
+                    <div class="flex-1"><span class="font-bold text-gray-700 block text-sm">ออกจากระบบ</span></div><svg
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-chevron-right w-5 h-5 text-gray-300" aria-hidden="true">
+                        <path d="m9 18 6-6-6-6"></path>
+                    </svg>
+                </button>
+            </div> -->
+        </div>
+    </div>
 </div>

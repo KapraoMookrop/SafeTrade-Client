@@ -310,6 +310,74 @@ body {
   border-color: rgba(0, 0, 0, 0.3);
 }
 
+.card-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.card-profile .card-header {
+  padding: 20px 0px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--primary);
+  color: var(--bg-main);
+  align-items: center;
+}
+
+.card-profile .card-header .profile-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--bg-main);
+  border: 2px solid var(--bg-main);
+}
+
+.card-profile .card-header .profile-role {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-top: 8px;
+  border: 1px solid var(--bg-main);
+  padding: 0 12px;
+  width: fit-content;
+}
+
+.card-profile .card-body .setting-item {
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(100, 100, 100, 0.1);
+  border-radius: 20px;
+  margin-top: 12px;
+}
+
+.form-check-input {
+  width: 50px !important;
+  height: 25px !important;
+  border-radius: 20px;
+  background-color: var(--bg-input);
+  border: 1px solid #d1d5db;
+  transition: all 0.3s ease;
+}
+
+.form-check-input:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.form-check-input::focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
 .text-xs {
   font-size: 12px;
   line-height: 16px;

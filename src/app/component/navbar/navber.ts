@@ -17,9 +17,12 @@ import { UserClientData } from '../../types/UserClientData';
 export class Navbar implements OnInit {
   User: UserClientData = {} as UserClientData;
 
-  constructor(private stateService: AppStateService, private loadingService: LoadingService, private authAppService: AuthService ) { }
+  constructor(public stateService: AppStateService, private loadingService: LoadingService, private authAppService: AuthService) { }
 
   ngOnInit() {
   }
 
+  getLogoUser() {
+    return this.stateService.user()?.FullName.replaceAll("นาย", "").replaceAll("นางสาว", "").replaceAll("นาง", "").charAt(0) || "";
+  }
 }

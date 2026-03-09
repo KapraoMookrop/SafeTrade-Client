@@ -26,9 +26,9 @@
             <div class="nav-item">
                 <a class="profile" routerLink="/profile" routerLinkActive="active">
                     <div class="profile-img">
-                        <span>C</span>
+                        <span>{{getLogoUser()}}</span>
                     </div>
-                    <span class="profile-name">Chatchawan</span>
+                    <span class="profile-name">{{stateService.user()?.FullName}}</span>
                 </a>
             </div>
         </div>
