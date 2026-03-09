@@ -13,14 +13,32 @@ import { Router } from '@angular/router';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private router: Router) {}
+  constructor(private readonly router: Router) { }
 
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    const token = localStorage.getItem('token');
 
-    return next.handle(req).pipe(
+    const skipUrls = [
+      '/api/users/Login',
+      '/api/users/SignUp'
+    ];
+
+    const shouldSkip = skipUrls.some(url => req.url.includes(url));
+
+    let authReq = req;
+
+    if (token && !shouldSkip) {
+      authReq = req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    }
+
+    return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
 
         if (error.status === 401 || error.status === 403) {

@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from './auth.interceptor';
 import { ProvinceData } from '../types/ProvinceData';
 import { SubDistrictData } from '../types/SubDistrictData';
 import { DistrictData } from '../types/DistrictData';
+import { Verify2FAType } from '../types/Enum';
+import { LoginResponseData } from '../types/LoginResponseData';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CoreAppService {
 
-    private baseUrl = 'https://safe-trade-server.vercel.app';
-    // private baseUrl = 'http://localhost:3000';
+    // private readonly baseUrl = 'https://safe-trade-server.vercel.app';
+    private readonly baseUrl = 'http://localhost:3000';
 
-    constructor(private http: HttpClient) { }
+    constructor(private readonly http: HttpClient) { }
     async GetProvinces(): Promise<ProvinceData[]> {
         const observable = this.http.get<ProvinceData[]>(
             `${this.baseUrl}/api/core/GetProvinces`
@@ -51,4 +51,23 @@ export class CoreAppService {
         const response = await lastValueFrom(observable);
         return response;
     }
+
+    async Enable2FA(): Promise<{ qr: string; secret: string; }> {
+        const observable = this.http.post<{ qr: string; secret: string; }>(
+            `${this.baseUrl}/api/core/Enable2FA`,
+            {}
+        );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
+
+    async Verify2FA(email: string, token: string, type: Verify2FAType): Promise<LoginResponseData> {
+        const observable = this.http.post<LoginResponseData>(
+            `${this.baseUrl}/api/core/Verify2FA`,
+            { email, token, type }
+        );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
+
 }

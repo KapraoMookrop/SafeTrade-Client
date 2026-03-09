@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, NgClass } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -15,6 +15,8 @@ import { ProvinceData } from '../../../types/ProvinceData';
 import { DistrictData } from '../../../types/DistrictData';
 import { SubDistrictData } from '../../../types/SubDistrictData';
 import { UserClientData } from '../../../types/UserClientData';
+import { Verify2FAType } from '../../../types/Enum';
+import { LoginResponseData } from '../../../types/LoginResponseData';
 
 @Component({
   selector: 'app-login',
@@ -22,16 +24,16 @@ import { UserClientData } from '../../../types/UserClientData';
   providers: [],
   templateUrl: './login.html',
 })
-export class Login {
+export class Login implements OnInit {
   UserLoginRequest: UserLoginRequest = {} as UserLoginRequest;
   UserSignUpRequest: UserSignUpDataRequest = {} as UserSignUpDataRequest;
   ConfirmPassword?: string;
 
   constructor(public loadingService: LoadingService,
-    private AuthService: AuthService,
-    private UserAppService: UserAppService,
-    private CoreAppService: CoreAppService,
-    private router: Router) {
+    private readonly AuthService: AuthService,
+    private readonly UserAppService: UserAppService,
+    private readonly CoreAppService: CoreAppService,
+    private readonly router: Router) {
   }
 
   ngOnInit() {
@@ -44,32 +46,54 @@ export class Login {
   }
 
   async Login() {
-    this.loadingService.show();
     try {
-      const result = await this.UserAppService.Login(this.UserLoginRequest);
-      const ClientUser : UserClientData = {
-        FullName: result.FullName
-      };
-      this.AuthService.login(result.JWT, ClientUser);
-      Swal.fire({
-        icon: 'success',
-        title: 'เข้าสู่ระบบสำเร็จ',
-        text: 'ยินดีต้อนรับเข้าสู่ระบบ',
-        timer: 1500,
-        showConfirmButton: false
-      }).then(() => {
-        this.setLocalStrorage('token', result.JWT);
-        this.router.navigate(['/home']);
-      });
+
+      this.loadingService.show();
+      let clientLogin = await this.UserAppService.Login(this.UserLoginRequest);
+      this.loadingService.hide();
+
+      if (clientLogin.IsEnabled2FA) {
+
+        const result = await Swal.fire({
+          title: 'กรอกรหัสยืนยัน',
+          text: 'กรอกรหัส 6 หลักจากแอป Authenticator',
+          input: 'tel',
+          inputPlaceholder: '123456',
+          inputAttributes: {
+            maxlength: '6',
+            pattern: '[0-9]*',
+            inputmode: 'numeric'
+          },
+          confirmButtonText: 'ยืนยัน',
+          showCancelButton: true,
+          cancelButtonText: 'ยกเลิก',
+          inputValidator: (value) => {
+            if (!value) return 'กรุณากรอกรหัสยืนยัน';
+            if (value.length !== 6) return 'รหัสต้องมี 6 หลัก';
+            return null;
+          }
+        });
+
+        if (!result.isConfirmed) {
+          this.loadingService.hide();
+          return;
+        }
+
+        this.loadingService.show();
+        clientLogin = await this.CoreAppService.Verify2FA(this.UserLoginRequest.Email, result.value, Verify2FAType.VERIFYLOGIN);
+        this.loadingService.hide();
+      }
+
+      await this.AfterLogin(clientLogin);
 
     } catch (err: HttpErrorResponse | any) {
+
       Swal.fire({
         icon: 'error',
         title: 'เข้าสู่ระบบไม่สำเร็จ',
         text: err.error?.message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ',
       });
 
-      console.error('Login failed:', err);
     } finally {
       this.loadingService.hide();
     }
@@ -250,8 +274,8 @@ export class Login {
     try {
       const result = await this.CoreAppService.GetProvinces();
       this.ProvinceDatas = result;
-    } catch (err) {
-      Swal.fire('Error', 'เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ', 'error');
+    } catch (err: HttpErrorResponse | any) {
+      Swal.fire(`Error', 'เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ + ${err.message} ', 'error`);
     }
   }
 
@@ -260,8 +284,8 @@ export class Login {
     try {
       const result = await this.CoreAppService.GetDistricts(provinceId);
       this.DistrictDatas = result;
-    } catch (err) {
-      Swal.fire('Error', 'เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ', 'error');
+    } catch (err: HttpErrorResponse | any) {
+      Swal.fire(`Error', 'เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ + ${err.message} ', 'error`);
     } finally {
       this.loadingService.hide();
     }
@@ -272,15 +296,11 @@ export class Login {
     try {
       const result = await this.CoreAppService.GetSubDistricts(districtId);
       this.SubDistrictDatas = result;
-    } catch (err) {
-      Swal.fire('Error', 'เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ', 'error');
+    } catch (err: HttpErrorResponse | any) {
+      Swal.fire(`Error', 'เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ + ${err.message} ', 'error`);
     } finally {
       this.loadingService.hide();
     }
-  }
-
-  private setLocalStrorage(key: string, value: string) {
-    localStorage.setItem(key, value);
   }
 
   private isValidEmail(email: string): boolean {
@@ -291,5 +311,29 @@ export class Login {
   private isValidPhone(phone: string): boolean {
     const regex = /^\d{10}$/;
     return regex.test(phone);
+  }
+
+  private async AfterLogin(clientData: LoginResponseData) {
+    const ClientUser = {
+      FullName: clientData.FullName,
+      Email: clientData.Email,
+      Phone: clientData.Phone,
+      Role: clientData.Role,
+      KycStatus: clientData.KycStatus,
+      UserStatus: clientData.UserStatus,
+      IsEnabled2FA: clientData.IsEnabled2FA
+    } as UserClientData;
+
+    Swal.fire({
+      icon: 'success',
+      title: 'เข้าสู่ระบบสำเร็จ',
+      text: 'ยินดีต้อนรับเข้าสู่ระบบ',
+      timer: 1500,
+      showConfirmButton: false
+    }).then(() => {
+      this.AuthService.SetUserClient(clientData.JWT, ClientUser, '');
+      this.router.navigate(['/home']);
+    });
+
   }
 }

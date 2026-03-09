@@ -12,6 +12,7 @@ export class AppStateService {
 
   // ===== GLOBAL STATE =====
   user = signal<UserClientData | null>(null);
+  userId = signal<string | null>(null);
   token = signal<string | null>(null);
   isLoading = signal(false);
   walletBalance = signal<number>(0);

@@ -1,4 +1,4 @@
-import { Component, HostListener, signal } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router, RouterOutlet } from "@angular/router";
 import { Navbar } from './component/navbar/navber';
@@ -6,6 +6,8 @@ import { AppStateService } from './core/AppStateService';
 import { UserClientData } from './types/UserClientData';
 import { AuthService } from './core/AuthService';
 import { filter } from 'rxjs/internal/operators/filter';
+import { jwtDecode } from "jwt-decode";
+import { KycStatus, UserRole, UserStatus } from './types/Enum';
 
 @Component({
   selector: 'app-root',
@@ -27,29 +29,43 @@ export class App {
 
   ngOnInit() {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
-        const url = event.urlAfterRedirects;
+      const url = event.urlAfterRedirects;
 
-        if (url.startsWith('/verify-email')) {
-          return;
-        }
+      if (url.startsWith('/verify-email')) {
+        return;
+      }
 
-        this.loadUserFromToken();
+      this.loadUserFromToken();
 
-      });
+    });
   }
 
   loadUserFromToken() {
     this.token = localStorage.getItem('token') || undefined;
-    if (this.token) {
-      const decodeJwt = this.decodeJwt(this.token);
-      const userClient = {
-        UserId: decodeJwt.userId,
+
+    if (!this.token) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    try {
+      const decodeJwt = jwtDecode<JwtPayload>(this.token);
+
+      const userClient: UserClientData = {
+        Email: decodeJwt.email,
         FullName: decodeJwt.fullName,
-      } as UserClientData;
+        Role: decodeJwt.role,
+        Phone: decodeJwt.phone,
+        KycStatus: decodeJwt.kycStatus,
+        UserStatus: decodeJwt.userStatus,
+        IsEnabled2FA: decodeJwt.isEnabled2FA
+      };
 
-      this.authService.login(this.token, userClient);
+      this.authService.SetUserClient(this.token, userClient, decodeJwt.userId);
 
-    } else {
+    } catch (err) {
+      console.error('Invalid token', err);
+      localStorage.removeItem('token');
       this.router.navigate(['/login']);
     }
   }
@@ -79,10 +95,15 @@ export class App {
       content.style.paddingTop = `${nav.offsetHeight}px`;
     }
   }
+}
 
-  decodeJwt(token: string) {
-    const payload = token.split('.')[1];
-    return JSON.parse(atob(payload));
-  }
-
+interface JwtPayload {
+  userId: string;
+  email: string;
+  fullName: string;
+  role: UserRole;
+  phone: string;
+  kycStatus: KycStatus;
+  userStatus: UserStatus;
+  isEnabled2FA: boolean;
 }
