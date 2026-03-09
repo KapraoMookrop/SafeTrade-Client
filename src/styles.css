@@ -596,6 +596,21 @@ body {
   color: var(--bg-main);
 }
 
+.otp-input {
+  width: 45px;
+  height: 55px;
+  font-size: 24px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.otp-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
 @media (max-width: 1000px) {
   .card-home .card-header {
     font-size: 42px;

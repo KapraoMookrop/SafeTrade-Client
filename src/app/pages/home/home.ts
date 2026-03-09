@@ -30,7 +30,6 @@ export class Home {
       const result = await this.CoreAppService.Enable2FA();
       this.qr = result.qr;
       Swal.fire({
-        icon: 'success',
         title: 'เปิดใช้งาน 2FA สำเร็จ',
         html: ` <p>1. สแกน QR Code ด้วยแอป Authenticator</p>
                 <p>2. กด <b>สแกนแล้ว</b> เพื่อกรอกรหัสยืนยัน</p>`,
@@ -53,45 +52,102 @@ export class Home {
   }
 
   async VerifyEnable2FA() {
-    Swal.fire({
-      title: 'กรอกรหัสยืนยัน',
-      text: 'กรอกรหัส 6 หลักจากแอป Authenticator',
-      input: 'text',
-      inputPlaceholder: '123456',
-      inputAttributes: {
-        maxlength: '6',
-        autocapitalize: 'off',
-        autocorrect: 'off'
-      },
-      confirmButtonText: 'ยืนยัน',
-      showCancelButton: true,
-      cancelButtonText: 'ยกเลิก',
-      inputValidator: (value) => {
-        if (!value) {
-          return 'กรุณากรอกรหัสยืนยัน';
-        }
-        if (value.length !== 6) {
-          return 'รหัสต้องมี 6 หลัก';
-        }
-        return null;
-      }
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const code = result.value;
-        try {
-          await this.CoreAppService.Verify2FA(this.stateService.user()?.Email || '', code, Verify2FAType.VERIFYENABLE);
-          Swal.fire({
-            icon: 'success',
-            title: 'เปิดใช้งาน 2FA เรียบร้อยแล้ว'
+    try {
+      const result = await Swal.fire({
+        title: 'ยืนยันตัวตน',
+        html: `<div style="text-align:center">
+                        <p style="margin-bottom:10px">กรอกรหัส 6 หลักจากแอป Authenticator</p>
+    
+                        <div id="otp-container" style="display:flex; gap:10px; justify-content:center;">
+                          <input class="otp-input" maxlength="1" />
+                          <input class="otp-input" maxlength="1" />
+                          <input class="otp-input" maxlength="1" />
+                          <input class="otp-input" maxlength="1" />
+                          <input class="otp-input" maxlength="1" />
+                          <input class="otp-input" maxlength="1" />
+                        </div>
+                      </div>`,
+        showCancelButton: true,
+        confirmButtonText: 'ยืนยัน',
+        cancelButtonText: 'ยกเลิก',
+        focusConfirm: false,
+
+        didOpen: () => {
+          const inputs = document.querySelectorAll<HTMLInputElement>('.otp-input');
+
+          inputs.forEach((input, index) => {
+            input.setAttribute('inputmode', 'numeric');
+            input.setAttribute('pattern', '[0-9]*');
+
+            input.addEventListener('input', () => {
+
+              // ให้รับเฉพาะตัวเลข
+              input.value = input.value.replaceAll(/[^0-9]/g, '');
+
+              if (input.value.length === 1 && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+              }
+            });
+
+            input.addEventListener('keydown', (e) => {
+
+              // กันปุ่มที่ไม่ใช่ตัวเลข
+              if (
+                !/[0-9]/.test(e.key) &&
+                e.key !== 'Backspace' &&
+                e.key !== 'Tab' &&
+                e.key !== 'ArrowLeft' &&
+                e.key !== 'ArrowRight'
+              ) {
+                e.preventDefault();
+              }
+
+              if (e.key === 'Backspace' && !input.value && index > 0) {
+                inputs[index - 1].focus();
+              }
+            });
+
           });
-        } catch (err: HttpErrorResponse | any) {
-          Swal.fire({
-            icon: 'error',
-            title: 'เกิดข้อผิดพลาด',
-            text: err.error?.message || 'รหัสยืนยันไม่ถูกต้อง',
-          });
+
+          inputs[0].focus();
+        },
+
+        preConfirm: () => {
+          const inputs = document.querySelectorAll<HTMLInputElement>('.otp-input');
+          let code = '';
+
+          inputs.forEach(i => code += i.value);
+
+          if (code.length !== 6) {
+            Swal.showValidationMessage('กรุณากรอกรหัส 6 หลัก');
+            return false;
+          }
+
+          return code;
         }
+      });
+
+      if (!result.isConfirmed) {
+        this.loadingService.hide();
+        return;
       }
-    });
+
+      this.loadingService.show();
+      await this.CoreAppService.Verify2FA(this.stateService.user()?.Email || '', result.value, Verify2FAType.VERIFYENABLE);
+      this.loadingService.hide();
+      Swal.fire({
+        icon: 'success',
+        title: 'ยืนยัน 2FA สำเร็จ',
+        text: 'คุณได้เปิดใช้งาน 2FA แล้ว',
+      });
+
+    } catch (err: HttpErrorResponse | any) {
+      Swal.fire({
+        icon: 'error',
+        title: 'เกิดข้อผิดพลาด',
+        text: err.error?.message || 'เกิดข้อผิดพลาดในการยืนยัน 2FA',
+      });
+      this.loadingService.hide();
+    }
   }
 }

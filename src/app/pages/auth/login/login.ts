@@ -55,22 +55,63 @@ export class Login implements OnInit {
       if (clientLogin.IsEnabled2FA) {
 
         const result = await Swal.fire({
-          title: 'กรอกรหัสยืนยัน',
-          text: 'กรอกรหัส 6 หลักจากแอป Authenticator',
-          input: 'tel',
-          inputPlaceholder: '123456',
-          inputAttributes: {
-            maxlength: '6',
-            pattern: '[0-9]*',
-            inputmode: 'numeric'
-          },
-          confirmButtonText: 'ยืนยัน',
+          title: 'ยืนยันตัวตน',
+          html: `<div style="text-align:center">
+                    <p style="margin-bottom:10px">กรอกรหัส 6 หลักจากแอป Authenticator</p>
+
+                    <div id="otp-container" style="display:flex; gap:10px; justify-content:center;">
+                      <input class="otp-input" maxlength="1" />
+                      <input class="otp-input" maxlength="1" />
+                      <input class="otp-input" maxlength="1" />
+                      <input class="otp-input" maxlength="1" />
+                      <input class="otp-input" maxlength="1" />
+                      <input class="otp-input" maxlength="1" />
+                    </div>
+                  </div>`,
           showCancelButton: true,
+          confirmButtonText: 'ยืนยัน',
           cancelButtonText: 'ยกเลิก',
-          inputValidator: (value) => {
-            if (!value) return 'กรุณากรอกรหัสยืนยัน';
-            if (value.length !== 6) return 'รหัสต้องมี 6 หลัก';
-            return null;
+          focusConfirm: false,
+
+          didOpen: () => {
+            const inputs = document.querySelectorAll<HTMLInputElement>('.otp-input');
+
+            inputs.forEach((input, index) => {
+              input.style.width = '45px';
+              input.style.height = '55px';
+              input.style.fontSize = '24px';
+              input.style.textAlign = 'center';
+              input.style.border = '1px solid #ddd';
+              input.style.borderRadius = '8px';
+
+              input.addEventListener('input', () => {
+                if (input.value.length === 1 && index < inputs.length - 1) {
+                  inputs[index + 1].focus();
+                }
+              });
+
+              input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !input.value && index > 0) {
+                  inputs[index - 1].focus();
+                }
+              });
+            });
+
+            inputs[0].focus();
+          },
+
+          preConfirm: () => {
+            const inputs = document.querySelectorAll<HTMLInputElement>('.otp-input');
+            let code = '';
+
+            inputs.forEach(i => code += i.value);
+
+            if (code.length !== 6) {
+              Swal.showValidationMessage('กรุณากรอกรหัส 6 หลัก');
+              return false;
+            }
+
+            return code;
           }
         });
 

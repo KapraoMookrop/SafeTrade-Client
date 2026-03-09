@@ -10,8 +10,8 @@ import { LoginResponseData } from '../types/LoginResponseData';
 })
 export class UserAppService {
 
-    private readonly baseUrl = 'https://safe-trade-server.vercel.app';
-    // private readonly baseUrl = 'http://localhost:3000';
+    // private readonly baseUrl = 'https://safe-trade-server.vercel.app';
+    private readonly baseUrl = 'http://localhost:3000';
 
     constructor(private readonly http: HttpClient) { }
     async Login(request: UserLoginRequest): Promise<LoginResponseData> {
