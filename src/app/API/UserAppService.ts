@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { UserLoginRequest } from '../types/UserLoginRequest';
 import { UserSignUpDataRequest } from '../types/UserSignUpDataRequest';
 import { LoginResponseData } from '../types/LoginResponseData';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserAppService {
 
-    // private readonly baseUrl = 'https://safe-trade-server.vercel.app';
-    private readonly baseUrl = 'http://localhost:3000';
+    private readonly baseUrl = environment.apiUrl;
 
     constructor(private readonly http: HttpClient) { }
     async Login(request: UserLoginRequest): Promise<LoginResponseData> {

@@ -6,14 +6,14 @@ import { SubDistrictData } from '../types/SubDistrictData';
 import { DistrictData } from '../types/DistrictData';
 import { Verify2FAType } from '../types/Enum';
 import { LoginResponseData } from '../types/LoginResponseData';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CoreAppService {
 
-    // private readonly baseUrl = 'https://safe-trade-server.vercel.app';
-    private readonly baseUrl = 'http://localhost:3000';
+    private readonly baseUrl = environment.apiUrl;
 
     constructor(private readonly http: HttpClient) { }
     async GetProvinces(): Promise<ProvinceData[]> {
