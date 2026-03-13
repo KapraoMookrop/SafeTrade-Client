@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "CompTraders-Client": {
+    "SafeTrade-Client": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -69,10 +69,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "CompTraders-Client:build:production"
+              "buildTarget": "SafeTrade-Client:build:production"
             },
             "development": {
-              "buildTarget": "CompTraders-Client:build:development"
+              "buildTarget": "SafeTrade-Client:build:development"
             }
           },
           "defaultConfiguration": "development"
