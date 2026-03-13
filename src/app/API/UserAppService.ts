@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
-import { UserLoginRequest } from '../types/UserLoginRequest';
 import { UserSignUpDataRequest } from '../types/UserSignUpDataRequest';
 import { LoginResponseData } from '../types/LoginResponseData';
 import { environment } from '../../environments/environment';
+import { UserLoginDataRequest } from '../types/UserLoginDataRequest';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +14,7 @@ export class UserAppService {
     private readonly baseUrl = environment.apiUrl;
 
     constructor(private readonly http: HttpClient) { }
-    async Login(request: UserLoginRequest): Promise<LoginResponseData> {
+    async Login(request: UserLoginDataRequest): Promise<LoginResponseData> {
 
         const observable = this.http.post<LoginResponseData>(
             `${this.baseUrl}/users/Login`, request

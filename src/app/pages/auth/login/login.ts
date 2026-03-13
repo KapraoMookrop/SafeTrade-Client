@@ -6,7 +6,6 @@ import { UserAppService } from '../../../API/UserAppService';
 import Swal from 'sweetalert2';
 import { LoadingService } from '../../../core/LoadingService';
 import { AuthService } from '../../../core/AuthService';
-import { UserLoginRequest } from '../../../types/UserLoginRequest';
 import { UserSignUpDataRequest } from '../../../types/UserSignUpDataRequest';
 import { Router } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -17,6 +16,7 @@ import { SubDistrictData } from '../../../types/SubDistrictData';
 import { UserClientData } from '../../../types/UserClientData';
 import { Verify2FAType } from '../../../types/Enum';
 import { LoginResponseData } from '../../../types/LoginResponseData';
+import { UserLoginDataRequest } from '../../../types/UserLoginDataRequest';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +25,7 @@ import { LoginResponseData } from '../../../types/LoginResponseData';
   templateUrl: './login.html',
 })
 export class Login implements OnInit {
-  UserLoginRequest: UserLoginRequest = {} as UserLoginRequest;
+  UserLoginRequest: UserLoginDataRequest = {} as UserLoginDataRequest;
   UserSignUpRequest: UserSignUpDataRequest = {} as UserSignUpDataRequest;
   ConfirmPassword?: string;
   IsShowPassword: boolean = false;
@@ -50,7 +50,9 @@ export class Login implements OnInit {
 
   async Login() {
     try {
-
+      if(this.UserLoginRequest.Email == null || this.UserLoginRequest.Password == null){
+        return;
+      }
       this.loadingService.show();
       let clientLogin = await this.UserAppService.Login(this.UserLoginRequest);
       this.loadingService.hide();
