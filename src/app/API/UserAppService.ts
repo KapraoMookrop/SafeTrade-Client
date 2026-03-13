@@ -17,7 +17,7 @@ export class UserAppService {
     async Login(request: UserLoginRequest): Promise<LoginResponseData> {
 
         const observable = this.http.post<LoginResponseData>(
-            `${this.baseUrl}/api/users/Login`, request
+            `${this.baseUrl}/users/Login`, request
         );
 
         const response = await lastValueFrom(observable);
@@ -27,7 +27,7 @@ export class UserAppService {
     async Signup(request: UserSignUpDataRequest): Promise<void> {
 
         const observable = this.http.post<void>(
-            `${this.baseUrl}/api/users/SignUp`, request
+            `${this.baseUrl}/users/SignUp`, request
         );
 
         const response = await lastValueFrom(observable);
@@ -37,7 +37,7 @@ export class UserAppService {
     async CheckAlreadyExistsEmail(email: string): Promise<boolean> {
 
         const observable = this.http.get<{ exists: boolean }>(
-            `${this.baseUrl}/api/users/CheckAlreadyExistsEmail?email=${email}`
+            `${this.baseUrl}/users/CheckAlreadyExistsEmail?email=${email}`
         );
         const response = await lastValueFrom(observable);
         return response.exists;

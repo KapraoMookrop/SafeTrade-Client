@@ -18,7 +18,7 @@ export class CoreAppService {
     constructor(private readonly http: HttpClient) { }
     async GetProvinces(): Promise<ProvinceData[]> {
         const observable = this.http.get<ProvinceData[]>(
-            `${this.baseUrl}/api/core/GetProvinces`
+            `${this.baseUrl}/core/GetProvinces`
         );
 
         const response = await lastValueFrom(observable);
@@ -27,7 +27,7 @@ export class CoreAppService {
 
     async GetDistricts(provinceId: string): Promise<DistrictData[]> {
         const observable = this.http.get<DistrictData[]>(
-            `${this.baseUrl}/api/core/GetDistricts?provinceId=${provinceId}`
+            `${this.baseUrl}/core/GetDistricts?provinceId=${provinceId}`
         );
         const response = await lastValueFrom(observable);
         return response;
@@ -35,7 +35,7 @@ export class CoreAppService {
 
     async GetSubDistricts(districtId: string): Promise<SubDistrictData[]> {
         const observable = this.http.get<SubDistrictData[]>(
-            `${this.baseUrl}/api/core/GetSubDistricts?districtId=${districtId}`
+            `${this.baseUrl}/core/GetSubDistricts?districtId=${districtId}`
         );
         const response = await lastValueFrom(observable);
         return response;
@@ -45,7 +45,7 @@ export class CoreAppService {
     async VerifyEmail(verifyToken: string): Promise<void> {
 
         const observable = this.http.get<void>(
-            `${this.baseUrl}/api/core/VerifyEmail?verifyToken=${verifyToken}`
+            `${this.baseUrl}/core/VerifyEmail?verifyToken=${verifyToken}`
         );
 
         const response = await lastValueFrom(observable);
@@ -54,7 +54,7 @@ export class CoreAppService {
 
     async Enable2FA(): Promise<{ qr: string; secret: string; }> {
         const observable = this.http.post<{ qr: string; secret: string; }>(
-            `${this.baseUrl}/api/core/Enable2FA`,
+            `${this.baseUrl}/core/Enable2FA`,
             {}
         );
         const response = await lastValueFrom(observable);
@@ -63,7 +63,7 @@ export class CoreAppService {
 
     async Disable2FA(): Promise<void> {
         const observable = this.http.post<void>(
-            `${this.baseUrl}/api/core/Disable2FA`,
+            `${this.baseUrl}/core/Disable2FA`,
             {}
         );
         const response = await lastValueFrom(observable);
@@ -72,7 +72,7 @@ export class CoreAppService {
 
     async Verify2FA(email: string, token: string, type: Verify2FAType): Promise<LoginResponseData> {
         const observable = this.http.post<LoginResponseData>(
-            `${this.baseUrl}/api/core/Verify2FA`,
+            `${this.baseUrl}/core/Verify2FA`,
             { email, token, type }
         );
         const response = await lastValueFrom(observable);
