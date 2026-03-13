@@ -28,12 +28,15 @@ export class Login implements OnInit {
   UserLoginRequest: UserLoginRequest = {} as UserLoginRequest;
   UserSignUpRequest: UserSignUpDataRequest = {} as UserSignUpDataRequest;
   ConfirmPassword?: string;
+  IsShowPassword: boolean = false;
+  IsShowConfirmPassword: boolean = false;
 
   constructor(public loadingService: LoadingService,
     private readonly AuthService: AuthService,
     private readonly UserAppService: UserAppService,
     private readonly CoreAppService: CoreAppService,
-    private readonly router: Router) {
+    private readonly router: Router,
+    private readonly cdr: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -141,7 +144,7 @@ export class Login implements OnInit {
   }
 
   step = 1;
-  nextStep() {
+  async nextStep() {
     switch (this.step) {
       case 1:
         if (!this.isValidEmail(this.UserSignUpRequest.Email)) {
@@ -186,6 +189,10 @@ export class Login implements OnInit {
           return;
         }
 
+        if ( await this.checkAlreadyExistsEmail()) {
+          return;
+        }
+
         this.step++;
         break;
       case 2:
@@ -221,6 +228,8 @@ export class Login implements OnInit {
         this.step++;
         break;
     }
+
+    this.cdr.detectChanges();
   }
 
   prevStep() {
@@ -375,6 +384,19 @@ export class Login implements OnInit {
       this.AuthService.SetUserClient(clientData.JWT, ClientUser, '');
       this.router.navigate(['/home']);
     });
+  }
 
+  private async checkAlreadyExistsEmail() {
+    try{
+      const result = await this.UserAppService.CheckAlreadyExistsEmail(this.UserSignUpRequest.Email);
+      return result;
+    }catch (err: HttpErrorResponse | any) {
+      Swal.fire({
+        icon: 'error',
+        title: 'เกิดข้อผิดพลาด',
+        text: err.error?.message || 'เกิดข้อผิดพลาดในการตรวจสอบอีเมล',
+      });
+      return true;
+    }
   }
 }
