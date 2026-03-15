@@ -50,7 +50,7 @@ export class Login implements OnInit {
 
   async Login() {
     try {
-      if(this.UserLoginRequest.Email == null || this.UserLoginRequest.Password == null){
+      if (this.UserLoginRequest.Email == null || this.UserLoginRequest.Password == null) {
         return;
       }
       this.loadingService.show();
@@ -154,9 +154,7 @@ export class Login implements OnInit {
             toast: true,
             position: 'top-end',
             icon: 'error',
-            html: `<div class="text-lg font-medium">
-                    รูปแบบอีเมลไม่ถูกต้อง
-                  </div>`,
+            text: `รูปแบบอีเมลไม่ถูกต้อง`,
             showConfirmButton: false,
             timer: 2000,
           })
@@ -168,9 +166,7 @@ export class Login implements OnInit {
             toast: true,
             position: 'top-end',
             icon: 'error',
-            html: `<div class="text-lg font-medium">
-                    กรุณากรอกข้อมูลให้ครบถ้วนก่อน
-                  </div>`,
+            text: `กรุณากรอกข้อมูลให้ครบถ้วนก่อน`,
             showConfirmButton: false,
             timer: 2000,
           })
@@ -182,16 +178,27 @@ export class Login implements OnInit {
             toast: true,
             position: 'top-end',
             icon: 'error',
-            html: `<div class="text-lg font-medium">
-                    รหัสผ่านไม่ตรงกัน
-                  </div>`,
+            text: `รหัสผ่านไม่ตรงกัน`,
             showConfirmButton: false,
             timer: 2000,
           })
           return;
         }
 
-        if ( await this.checkAlreadyExistsEmail()) {
+        const passwordValidationResult = await this.validatePassword(this.UserSignUpRequest.Password);
+        if (!passwordValidationResult.isValid) {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            text: passwordValidationResult.details,
+            showConfirmButton: false,
+            timer: 3000,
+          })
+          return;
+        }
+
+        if (await this.checkAlreadyExistsEmail()) {
           return;
         }
 
@@ -204,9 +211,7 @@ export class Login implements OnInit {
             toast: true,
             position: 'top-end',
             icon: 'error',
-            html: `<div class="text-lg font-medium">
-                    กรุณากรอกข้อมูลให้ครบถ้วนก่อน
-                  </div>`,
+            text: `กรุณากรอกข้อมูลให้ครบถ้วนก่อน`,
             showConfirmButton: false,
             timer: 2000,
           })
@@ -218,9 +223,7 @@ export class Login implements OnInit {
             toast: true,
             position: 'top-end',
             icon: 'error',
-            html: `<div class="text-lg font-medium">
-                    รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง
-                  </div>`,
+            text: `รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง`,
             showConfirmButton: false,
             timer: 2000,
           })
@@ -355,6 +358,38 @@ export class Login implements OnInit {
     }
   }
 
+  async ForgotPassword() {
+    const { value: email } = await Swal.fire({
+      title: 'ลืมรหัสผ่าน',
+      input: 'email',
+      inputLabel: 'กรุณากรอกอีเมลที่คุณใช้สมัครสมาชิก',
+      inputPlaceholder: 'อีเมล',
+      showCancelButton: true,
+      confirmButtonText: 'ส่งอีเมลรีเซ็ตรหัสผ่าน',
+      cancelButtonText: 'ยกเลิก',
+    });
+
+    if (email) {
+      try {
+        this.loadingService.show();
+        await this.CoreAppService.SendForgotPasswordEmail(email);
+        Swal.fire({
+          icon: 'success',
+          title: 'ส่งอีเมลรีเซ็ตรหัสผ่านแล้ว',
+          text: 'กรุณาตรวจสอบอีเมลของคุณเพื่อรับลิงก์รีเซ็ตรหัสผ่าน',
+        });
+      } catch (err: HttpErrorResponse | any) {
+        Swal.fire({
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาด',
+          text: err.error?.message || 'เกิดข้อผิดพลาดในการส่งอีเมลรีเซ็ตรหัสผ่าน',
+        });
+      } finally {
+        this.loadingService.hide();
+      }
+    }
+  }
+
   private isValidEmail(email: string): boolean {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -389,10 +424,10 @@ export class Login implements OnInit {
   }
 
   private async checkAlreadyExistsEmail() {
-    try{
+    try {
       const result = await this.UserAppService.CheckAlreadyExistsEmail(this.UserSignUpRequest.Email);
       return result;
-    }catch (err: HttpErrorResponse | any) {
+    } catch (err: HttpErrorResponse | any) {
       Swal.fire({
         icon: 'error',
         title: 'เกิดข้อผิดพลาด',
@@ -400,5 +435,47 @@ export class Login implements OnInit {
       });
       return true;
     }
+  }
+
+  private async validatePassword(password: string): Promise<{ isValid: boolean; details: string; }> {
+    if (password.length < 8) {
+      return {
+        isValid: false,
+        details: "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร"
+      };
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      return {
+        isValid: false,
+        details: "รหัสผ่านต้องประกอบด้วยตัวพิมพ์ใหญ่ อย่างน้อย 1 ตัว"
+      };
+    }
+
+    if (!/[a-z]/.test(password)) {
+      return {
+        isValid: false,
+        details: "รหัสผ่านต้องประกอบด้วยตัวพิมพ์เล็ก อย่างน้อย 1 ตัว"
+      };
+    }
+
+    if (!/\d/.test(password)) {
+      return {
+        isValid: false,
+        details: "รหัสผ่านต้องประกอบด้วยตัวเลข อย่างน้อย 1 ตัว"
+      };
+    }
+
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+      return {
+        isValid: false,
+        details: "รหัสผ่านต้องประกอบด้วยอักขระพิเศษ อย่างน้อย 1 ตัว"
+      };
+    }
+
+    return {
+      isValid: true,
+      details: ""
+    };
   }
 }

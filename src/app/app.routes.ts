@@ -5,6 +5,7 @@ import { Profile } from './pages/profile/profile';
 import { Tracking } from './pages/tracking/tracking';
 import { Login } from './pages/auth/login/login';
 import { VerifyEmail } from './pages/auth/verify-email/verify-email';
+import { ChangePassword } from './pages/auth/change-password/change-password';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -13,5 +14,6 @@ export const routes: Routes = [
     { path: 'tracking', component: Tracking },
     { path: 'profile', component: Profile },
     { path: 'login', component: Login },
-    { path: 'verify-email/:verifyToken', component: VerifyEmail }
+    { path: 'verify-email/:verifyToken', component: VerifyEmail },
+    { path: 'change-password/:verifyToken', component: ChangePassword }
 ];

@@ -79,4 +79,20 @@ export class CoreAppService {
         return response;
     }
 
+    
+    async SendForgotPasswordEmail(email: string): Promise<void> {
+        const observable = this.http.post<void>(
+            `${this.baseUrl}/core/SendForgotPasswordEmail`, { email }
+        );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
+
+    async ChangePassword(token: string, newPassword: string): Promise<void> {
+        const observable = this.http.post<void>(
+            `${this.baseUrl}/core/ChangePassword`, { token, newPassword }
+        );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
 }

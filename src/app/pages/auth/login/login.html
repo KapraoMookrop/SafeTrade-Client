@@ -61,7 +61,7 @@
                     </div>
                 </div>
 
-                <div class="input-group mb-3">
+                <div class="input-group mb-1">
                     <span class="input-group-text">
                         <i class="fa-solid fa-key"></i>
                     </span>
@@ -72,6 +72,9 @@
                         <i class="fa-regular toggle-password" [class]="IsShowPassword ? 'fa-eye' : 'fa-eye-slash'"
                             (click)="IsShowPassword = !IsShowPassword"></i>
                     </div>
+                </div>
+                <div class="text-end mb-3">
+                    <a class="text-primary cursor-pointer" (click)="ForgotPassword()">ลืมรหัสผ่าน?</a>
                 </div>
             </div>
             }

@@ -31,7 +31,7 @@ export class App {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
       const url = event.urlAfterRedirects;
 
-      if (url.startsWith('/verify-email')) {
+      if (url.startsWith('/verify-email') || url.startsWith('/change-password')) {
         return;
       }
 
