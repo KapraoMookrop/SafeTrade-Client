@@ -59,7 +59,10 @@
                 </div>
             </div>
 
-            <button class="btn btn-danger mt-2" (click)="LogOut()">ออกจากระบบ</button>
+            <div class="d-flex gap-2 mt-2">
+                <button class="btn btn-danger" (click)="LogOut()">ออกจากระบบ</button>
+                <button class="btn btn-outline-danger border border-danger" (click)="DeleteAccount()">ลบบัญชี</button>
+            </div>
             <!-- <div class="grid sm:grid-cols-2 gap-4 font-kanit">
                 <button
                     class="flex items-center gap-4 p-5 rounded-2xl border border-gray-50 hover:bg-gray-50 transition-all text-left group">

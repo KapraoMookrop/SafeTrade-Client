@@ -95,4 +95,20 @@ export class CoreAppService {
         const response = await lastValueFrom(observable);
         return response;
     }
+
+    async SendMailDeleteAccount(email: string): Promise<void> {
+        const observable = this.http.post<void>(
+            `${this.baseUrl}/core/SendMailDeleteAccount`, { email }
+        );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
+
+    async DeleteAccount(token: string): Promise<void> {
+        const observable = this.http.post<void>(
+            `${this.baseUrl}/core/DeleteAccount`, { token }
+        );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
 }

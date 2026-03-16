@@ -67,7 +67,7 @@ export class Profile extends BaseComponent {
           return;
         }
 
-        await this.CoreAppService.Verify2FA(this.AppStateService.user()?.Email || '', result.value, Verify2FAType.VERIFYENABLE);
+        await this.CoreAppService.Verify2FA(this.AppStateService.user()?.Email || '', result.value, Verify2FAType.VERIFY);
         await this.CoreAppService.Disable2FA();
         await this.SwalSuccess('ยืนยัน 2FA สำเร็จ', 'คุณได้ปิดใช้งาน 2FA แล้ว');
         this.AuthService.UpdateUser({ IsEnabled2FA: false });
@@ -93,6 +93,29 @@ export class Profile extends BaseComponent {
     if (result.isConfirmed) {
       this.AuthService.ClearUserClient();
       window.location.href = '/';
+    }
+  }
+
+  async DeleteAccount() {
+    try {
+      const confirm = await this.SwalConfirmAlert('ยืนยันการลบบัญชี', 'คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีของคุณ? การกระทำนี้ไม่สามารถย้อนกลับได้', 'ใช่, ลบบัญชี', 'ไม่, ยกเลิก');
+      if (confirm.isConfirmed && this.AppStateService.user()?.IsEnabled2FA) {
+        const result = await this.Swal2FAAlert();
+
+        if (!result.isConfirmed) {
+          return;
+        }
+
+        await this.CoreAppService.Verify2FA(this.AppStateService.user()?.Email || '', result.value, Verify2FAType.VERIFY);
+      }
+
+      await this.CoreAppService.SendMailDeleteAccount(this.AppStateService.user()?.Email || '');
+      await this.SwalSuccess('ส่งอีเมลยืนยันการลบบัญชีแล้ว', 'โปรดตรวจสอบอีเมลของคุณเพื่อยืนยันการลบบัญชี');
+      this.AuthService.ClearUserClient();
+      window.location.href = '/';
+
+    } catch (err: HttpErrorResponse | any) {
+      await this.SwalError('เกิดข้อผิดพลาด', err.error?.message || 'เกิดข้อผิดพลาดในการลบบัญชี');
     }
   }
 }

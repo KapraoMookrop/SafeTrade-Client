@@ -15,6 +15,7 @@ export enum KycStatus {
 // สถานะบัญชีผู้ใช้
 export enum UserStatus {
   ACTIVE = "ACTIVE",
+  PENDING_VERIFICATION = "PENDING_VERIFICATION",
   SUSPENDED = "SUSPENDED",
 }
 
@@ -104,4 +105,5 @@ export enum DisputeStatus {
 export enum Verify2FAType {
   VERIFYLOGIN = "VERIFYLOGIN",
   VERIFYENABLE = "VERIFYENABLE",
+  VERIFY = "VERIFY",
 }
