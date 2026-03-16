@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule, NgClass } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CoreAppService } from '../../../API/CoreAppService';
-import Swal from 'sweetalert2';
-import { LoadingService } from '../../../core/LoadingService';
-import { ActivatedRoute, Router } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { BaseComponent } from '../../../core/BaseComponent';
 
 @Component({
   selector: 'app-change-password',
@@ -14,11 +12,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
   providers: [],
   templateUrl: './change-password.html',
 })
-export class ChangePassword {
-  constructor(public loadingService: LoadingService,
-    private CoreAppService: CoreAppService,
-    private route: ActivatedRoute,
-    private router: Router) {
+export class ChangePassword extends BaseComponent {
+  constructor(private CoreAppService: CoreAppService) {
+    super();
   }
 
   token: string = '';
@@ -28,7 +24,7 @@ export class ChangePassword {
   IsConfirmPassword: boolean = false;
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
+    this.Route.paramMap.subscribe(params => {
       const token = params.get('verifyToken');
       if (token) {
         this.token = token;
@@ -38,46 +34,23 @@ export class ChangePassword {
 
   async ChangePassword() {
     if (this.NewPassword != this.ConfirmPassword) {
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'error',
-        text: 'กรุณากรอกรหัสผ่านให้ตรงกัน',
-        showConfirmButton: false
-      });
+      await this.Swaltoast('รหัสผ่านไม่ตรงกัน', 'error');
       return;
     }
 
     const validationResult = await this.validatePassword(this.NewPassword);
     if (!validationResult.isValid) {
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'error',
-        text: validationResult.details,
-        showConfirmButton: false
-      });
+      await this.Swaltoast(validationResult.details, 'error');
       return;
     }
 
     try {
-      this.loadingService.show();
       await this.CoreAppService.ChangePassword(this.token, this.NewPassword);
-      Swal.fire({
-        icon: 'success',
-        title: 'เปลี่ยนรหัสผ่านสำเร็จ',
-        text: 'คุณสามารถเข้าสู่ระบบด้วยรหัสผ่านใหม่ได้แล้ว',
-      }).then(() => {
-        this.router.navigate(['/login']);
+      await this.SwalAlert('เปลี่ยนรหัสผ่านสำเร็จ', 'คุณสามารถเข้าสู่ระบบด้วยรหัสผ่านใหม่ได้แล้ว', 'success').then(() => {
+        this.NavigateTo('/login');
       });
     } catch (err: HttpErrorResponse | any) {
-      Swal.fire({
-        icon: 'error',
-        title: 'เกิดข้อผิดพลาด',
-        text: err.error?.message || 'ไม่สามารถเปลี่ยนรหัสผ่านได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง',
-      });
-    } finally {
-      this.loadingService.hide();
+      await this.SwalError('เกิดข้อผิดพลาด', err.error?.message || 'เกิดข้อผิดพลาดในการเปลี่ยนรหัสผ่าน');
     }
   }
 

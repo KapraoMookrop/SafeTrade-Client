@@ -7,18 +7,21 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { LoadingService } from '../core/LoadingService';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private readonly router: Router) { }
+  constructor(private readonly router: Router, private readonly LoadingService: LoadingService) { }
 
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    this.LoadingService.show();
+
     const token = localStorage.getItem('token');
 
     const skipUrls = [
@@ -39,9 +42,12 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     return next.handle(authReq).pipe(
-      catchError((error: HttpErrorResponse) => {
+      finalize(() => {
+        this.LoadingService.hide();
+      }),
 
-        if (error.status === 401 || error.status === 403) {
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
           localStorage.removeItem('token');
           this.router.navigate(['/login']);
         }

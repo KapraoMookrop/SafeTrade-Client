@@ -1,12 +1,7 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule, NgClass } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
-import Swal from 'sweetalert2';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { FormControl } from '@angular/forms';
-import { AppStateService } from '../../core/AppStateService';
-import { LoadingService } from '../../core/LoadingService';
+import { CommonModule } from '@angular/common';
+import { BaseComponent } from '../../core/BaseComponent';
 
 @Component({
   selector: 'app-tracking',
@@ -14,15 +9,8 @@ import { LoadingService } from '../../core/LoadingService';
   providers: [],
   templateUrl: './tracking.html',
 })
-export class Tracking {
-  constructor(public stateService: AppStateService, public loadingService: LoadingService, private cdr: ChangeDetectorRef) {
-  }
-
-  ngOnInit() {
-
-  }
-
-  async SearchData() {
-    
+export class Tracking extends BaseComponent {
+  constructor() {
+    super();
   }
 }
