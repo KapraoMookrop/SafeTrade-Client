@@ -17,5 +17,7 @@ export const routes: Routes = [
     { path: 'login', component: Login },
     { path: 'verify-email/:verifyToken', component: VerifyEmail },
     { path: 'change-password/:verifyToken', component: ChangePassword },
-    { path: 'delete-account/:deleteToken', component: DeleteAccount }
+    { path: 'delete-account/:deleteToken', component: DeleteAccount },
+    { path: 'chat-room/:chatRoomId', component: Chat },
+    { path: '**', redirectTo: 'home' },
 ];

@@ -10,17 +10,20 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoadingService } from '../core/LoadingService';
+import { SKIP_LOADING } from '../core/LoadingContext';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private readonly router: Router, private readonly LoadingService: LoadingService) { }
 
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    this.LoadingService.show();
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
+    const skipLoading = req.context.get(SKIP_LOADING);
+
+    if (!skipLoading) {
+      this.LoadingService.show();
+    }
 
     const token = localStorage.getItem('token');
 
@@ -29,11 +32,11 @@ export class AuthInterceptor implements HttpInterceptor {
       '/api/users/SignUp'
     ];
 
-    const shouldSkip = skipUrls.some(url => req.url.includes(url));
+    const shouldSkipAuth = skipUrls.some(url => req.url.includes(url));
 
     let authReq = req;
 
-    if (token && !shouldSkip) {
+    if (token && !shouldSkipAuth) {
       authReq = req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
@@ -43,7 +46,9 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       finalize(() => {
-        this.LoadingService.hide();
+        if (!skipLoading) {
+          this.LoadingService.hide();
+        }
       }),
 
       catchError((error: HttpErrorResponse) => {
