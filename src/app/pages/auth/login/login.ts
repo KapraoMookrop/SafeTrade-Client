@@ -63,7 +63,7 @@ export class Login extends BaseComponent implements OnInit {
       await this.AfterLogin(clientLogin);
 
     } catch (err: HttpErrorResponse | any) {
-      await this.SwalError('เข้าสู่ระบบไม่สำเร็จ', err.error?.message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ');
+      await this.SwalError('เข้าสู่ระบบไม่สำเร็จ', err.error?.message || err.message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ');
     }
   }
 
@@ -130,7 +130,7 @@ export class Login extends BaseComponent implements OnInit {
       await this.SwalSuccess('สมัครสมาชิกสำเร็จ', 'กรุณาตรวจสอบอีเมลเพื่อยืนยันบัญชีของคุณ');
       this.isLogin = true;
     } catch (err: HttpErrorResponse | any) {
-      await this.SwalError('สมัครสมาชิกไม่สำเร็จ', err.error?.message || 'เกิดข้อผิดพลาดในการสมัครสมาชิก');
+      await this.SwalError('สมัครสมาชิกไม่สำเร็จ', err.error?.message || err.message || 'เกิดข้อผิดพลาดในการสมัครสมาชิก');
     }
   }
 
@@ -195,7 +195,7 @@ export class Login extends BaseComponent implements OnInit {
       const result = await this.CoreAppService.GetProvinces();
       this.ProvinceDatas = result;
     } catch (err: HttpErrorResponse | any) {
-      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ + ${err.message}`);
+      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ + ${err.error?.message || err.message}`);
     }
   }
 
@@ -204,7 +204,7 @@ export class Login extends BaseComponent implements OnInit {
       const result = await this.CoreAppService.GetDistricts(provinceId);
       this.DistrictDatas = result;
     } catch (err: HttpErrorResponse | any) {
-      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ + ${err.message}`);
+      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ + ${err.error?.message || err.message}`);
     }
   }
 
@@ -213,7 +213,7 @@ export class Login extends BaseComponent implements OnInit {
       const result = await this.CoreAppService.GetSubDistricts(districtId);
       this.SubDistrictDatas = result;
     } catch (err: HttpErrorResponse | any) {
-      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ + ${err.message}`);
+      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ + ${err.error?.message || err.message}`);
     }
   }
 
@@ -224,7 +224,7 @@ export class Login extends BaseComponent implements OnInit {
         await this.CoreAppService.SendForgotPasswordEmail(email);
         await this.SwalSuccess('ส่งอีเมลรีเซ็ตรหัสผ่านแล้ว', 'กรุณาตรวจสอบอีเมลของคุณเพื่อรับลิงก์รีเซ็ตรหัสผ่าน');
       } catch (err: HttpErrorResponse | any) {
-        await this.SwalError('เกิดข้อผิดพลาด', err.error?.message || 'เกิดข้อผิดพลาดในการส่งอีเมลรีเซ็ตรหัสผ่าน');
+        await this.SwalError('เกิดข้อผิดพลาด', err.error?.message || err.message || 'เกิดข้อผิดพลาดในการส่งอีเมลรีเซ็ตรหัสผ่าน');
       }
     }
   }
@@ -261,7 +261,7 @@ export class Login extends BaseComponent implements OnInit {
       const result = await this.UserAppService.CheckAlreadyExistsEmail(this.UserSignUpRequest.Email);
       return result;
     } catch (err: HttpErrorResponse | any) {
-      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาดในการตรวจสอบอีเมล กรุณาติดต่อผู้ดูแลระบบ + ${err.message}`);
+      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาดในการตรวจสอบอีเมล กรุณาติดต่อผู้ดูแลระบบ + ${err.error?.message || err.message}`);
       return true;
     }
   }

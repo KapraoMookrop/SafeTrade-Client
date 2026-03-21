@@ -8,6 +8,7 @@ import { AuthService } from './core/AuthService';
 import { filter } from 'rxjs/internal/operators/filter';
 import { jwtDecode } from "jwt-decode";
 import { KycStatus, UserRole, UserStatus } from './types/Enum';
+import { SocketService } from './API/SocketService';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,10 @@ import { KycStatus, UserRole, UserStatus } from './types/Enum';
 export class App {
   token?: string;
 
-  constructor(public authService: AuthService, public stateService: AppStateService, public router: Router) { }
+  constructor(public authService: AuthService, 
+              public stateService: AppStateService, 
+              public router: Router, 
+              private SocketService: SocketService) { }
 
   showNavbarRoutes = ['/home', '/chat', '/tracking', '/profile'];
 
@@ -36,7 +40,9 @@ export class App {
       }
 
       this.loadUserFromToken();
-
+      if (!this.SocketService.isConnected()) {
+        this.SocketService.connect();
+      }
     });
   }
 

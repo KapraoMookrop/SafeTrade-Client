@@ -1,0 +1,25 @@
+<div class="container-md">
+    <h1>Chat</h1>
+    <div class="chat-container">
+        <div class="chat-box">
+            @if(HasMore){
+                <span (click)="LoadMore()" class="btn btn-link">โหลดข้อความเพิ่มเติม</span>
+            }
+            @for (msg of Messages; track $index) {
+            <div class="message">
+                <span [class.fw-bold]="this.AppStateService.userId() == msg.SenderId">
+                    {{ this.AppStateService.userId() == msg.SenderId ? this.CurrentUserName : this.OtherUserName }}
+                </span>
+                :
+                <span> {{ msg.Content }}</span>
+            </div>
+            }
+        </div>
+
+        <div class="chat-input">
+            <input [(ngModel)]="newMessage" placeholder="พิมพ์ข้อความ..." />
+            <button (click)="SendMessage()">Send</button>
+        </div>
+
+    </div>
+</div>

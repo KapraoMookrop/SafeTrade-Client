@@ -7,6 +7,7 @@ import { Login } from './pages/auth/login/login';
 import { VerifyEmail } from './pages/auth/verify-email/verify-email';
 import { ChangePassword } from './pages/auth/change-password/change-password';
 import { DeleteAccount } from './pages/auth/delete-account/delete-account';
+import { ChatRoom } from './pages/chat-room/chat-room';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -18,6 +19,6 @@ export const routes: Routes = [
     { path: 'verify-email/:verifyToken', component: VerifyEmail },
     { path: 'change-password/:verifyToken', component: ChangePassword },
     { path: 'delete-account/:deleteToken', component: DeleteAccount },
-    { path: 'chat-room/:chatRoomId', component: Chat },
+    { path: 'chat-room/:chatRoomId', component: ChatRoom },
     { path: '**', redirectTo: 'home' },
 ];

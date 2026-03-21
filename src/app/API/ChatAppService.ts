@@ -6,6 +6,7 @@ import { SendMessagesRequest } from '../types/SendMessagesRequest';
 import { SKIP_LOADING } from '../core/LoadingContext';
 import { MessageRequestData } from '../types/MessageRequestData';
 import { MessageDataList } from '../types/MessageDataList';
+import { ChatRoomData } from '../types/ChatRoomData';
 
 @Injectable({
     providedIn: 'root'
@@ -34,6 +35,26 @@ export class ChatAppService {
             {
                 context: new HttpContext().set(SKIP_LOADING, true)
             }
+        );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
+
+    async MarkAsRead(request: MessageRequestData): Promise<void> {
+        const observable = this.http.post<void>(
+            `${this.baseUrl}/chat/MarkAsRead`,
+            request,
+            {
+                context: new HttpContext().set(SKIP_LOADING, true)
+            }
+        );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
+
+    async GetAllChatRooms(): Promise<ChatRoomData[]> {
+        const observable = this.http.get<ChatRoomData[]>(
+            `${this.baseUrl}/chat/GetAllChatRooms`,
         );
         const response = await lastValueFrom(observable);
         return response;
