@@ -10,7 +10,7 @@ export class SocketService {
 
     connect() {
         if (this.socket && this.socket.connected) return;
-        this.socket = io(environment.apiUrl.replace('/api', ''));
+        this.socket = io(environment.socketUrl);
     }
 
     onNewMessageNotify(callback: (msg: any) => void) {
