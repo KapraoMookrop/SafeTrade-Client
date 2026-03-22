@@ -1,5 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { UserClientData } from '../types/UserClientData';
+import { ChatRoomData } from '../types/ChatRoomData';
 
 export interface User {
   id: string;
@@ -16,6 +17,7 @@ export class AppStateService {
   token = signal<string | null>(null);
   isLoading = signal(false);
   walletBalance = signal<number>(0);
+  allChatRooms = signal<ChatRoomData[]>([]);
 
   // ===== COMPUTED =====
   isLoggedIn = computed(() => !!this.user());

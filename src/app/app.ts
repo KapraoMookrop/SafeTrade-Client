@@ -9,6 +9,7 @@ import { filter } from 'rxjs/internal/operators/filter';
 import { jwtDecode } from "jwt-decode";
 import { KycStatus, UserRole, UserStatus } from './types/Enum';
 import { SocketService } from './API/SocketService';
+import { ChatService } from '../app/core/ChatService';
 
 @Component({
   selector: 'app-root',
@@ -20,10 +21,11 @@ import { SocketService } from './API/SocketService';
 export class App {
   token?: string;
 
-  constructor(public authService: AuthService, 
-              public stateService: AppStateService, 
-              public router: Router, 
-              private SocketService: SocketService) { }
+  constructor(public authService: AuthService,
+    public stateService: AppStateService,
+    public router: Router,
+    private SocketService: SocketService,
+    private ChatService: ChatService) { }
 
   showNavbarRoutes = ['/home', '/chat', '/tracking', '/profile'];
 
@@ -31,22 +33,26 @@ export class App {
     return this.showNavbarRoutes.includes(this.router.url);
   }
 
-  ngOnInit() {
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
+  async ngOnInit() {
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(async (event: any) => {
       const url = event.urlAfterRedirects;
 
       if (url.startsWith('/verify-email') || url.startsWith('/change-password') || url.startsWith('/delete-account')) {
         return;
       }
 
-      this.loadUserFromToken();
+      await this.loadUserFromToken();
       if (!this.SocketService.isConnected()) {
         this.SocketService.connect();
       }
+      this.SocketService.joinUser(this.stateService.userId() || '');
+      this.SocketService.onNewMessageNotify((data) => {
+        // this.ChatService.pushMessage(data);
+      });
     });
   }
 
-  loadUserFromToken() {
+  async loadUserFromToken() {
     this.token = localStorage.getItem('token') || undefined;
 
     if (!this.token) {

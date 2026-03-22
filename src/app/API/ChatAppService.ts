@@ -31,10 +31,7 @@ export class ChatAppService {
     async GetMessages(request: MessageRequestData): Promise<MessageDataList> {
         const observable = this.http.post<MessageDataList>(
             `${this.baseUrl}/chat/GetMessages`,
-            request,
-            {
-                context: new HttpContext().set(SKIP_LOADING, true)
-            }
+            request
         );
         const response = await lastValueFrom(observable);
         return response;

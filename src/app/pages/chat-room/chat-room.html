@@ -1,25 +1,48 @@
-<div class="container-md">
-    <h1>Chat</h1>
-    <div class="chat-container">
-        <div class="chat-box">
+<div class="chat-header">
+    <div class="d-flex gap-3 align-items-center">
+        <i class="fa-solid fa-angle-left text-2xl cursor-pointer" (click)="NavigateTo(`/chat`)"></i>
+        <span class="avatar text-2xl font-bold">
+            {{ OtherUserName ? OtherUserName.charAt(0) : "U" }}
+        </span>
+        <span class="text-2xl font-medium">{{ OtherUserName }}</span>
+    </div>
+</div>
+<div class="chat-container">
+    <div class="chat-scroll" id="chat-box">
+        <div class="chat-box container-md">
             @if(HasMore){
-                <span (click)="LoadMore()" class="btn btn-link">โหลดข้อความเพิ่มเติม</span>
+            <div (click)="LoadMore()" class="pt-3 d-flex justify-content-center cursor-pointer">
+                โหลดข้อความเพิ่มเติม
+            </div>
             }
+
             @for (msg of Messages; track $index) {
-            <div class="message">
-                <span [class.fw-bold]="this.AppStateService.userId() == msg.SenderId">
-                    {{ this.AppStateService.userId() == msg.SenderId ? this.CurrentUserName : this.OtherUserName }}
+            <div class="message"
+                [class]="this.AppStateService.userId() == msg.SenderId ? 'message-sent' : 'message-received'">
+                <span class="avatar text-2xl font-bold">
+                    {{ msg.SenderName ? msg.SenderName.charAt(0) : "U" }}
                 </span>
-                :
-                <span> {{ msg.Content }}</span>
+
+                <div class="message-content">
+                    <span class="sender-name text-muted"
+                        [class.text-end]="this.AppStateService.userId() == msg.SenderId">
+                        {{ msg.SenderName }}
+                    </span>
+
+                    <div class="message-text"
+                        [class]="this.AppStateService.userId() == msg.SenderId ? 'text-end' : 'text-start'">
+                        <span>{{ msg.Content }}</span>
+                        <span class="text-xs mt-2">{{ msg.CreatedAt | date:'shortTime' }}</span>
+                    </div>
+                </div>
             </div>
             }
         </div>
-
-        <div class="chat-input">
-            <input [(ngModel)]="newMessage" placeholder="พิมพ์ข้อความ..." />
-            <button (click)="SendMessage()">Send</button>
-        </div>
-
     </div>
+</div>
+<div class="chat-input">
+    <input class="form-control" [(ngModel)]="newMessage" placeholder="พิมพ์ข้อความ..." />
+    <button class="btn btn-primary d-flex justify-content-center align-items-center" (click)="SendMessage()">
+        <i class="fa-solid fa-paper-plane"></i>
+    </button>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone, AfterViewInit } from '@angular/core';
 import { BaseComponent } from '../../core/BaseComponent';
 import { SocketService } from '../../API/SocketService';
 import { ChatAppService } from '../../API/ChatAppService';
@@ -8,11 +8,13 @@ import { SendMessagesRequest } from '../../types/SendMessagesRequest';
 import { MessageContentType } from '../../types/Enum';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ReadMessagesRequest } from '../../types/ReadMessagesRequest';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-chat-room',
   templateUrl: './chat-room.html',
-  imports: [FormsModule]
+  imports: [FormsModule, CommonModule]
 })
 export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
   ChatRoomId = '';
@@ -24,7 +26,7 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
   newMessage = '';
 
   constructor(private SocketService: SocketService,
-    private ChatService: ChatAppService) {
+    private ChatAppService: ChatAppService) {
     super();
   }
 
@@ -44,8 +46,14 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
         this.SocketService.offNewMessage();
         this.SocketService.onNewMessage((msg) => {
           this.Messages.push(msg);
+          this.MarkAsRead();
           this.RefreshDetectChanges();
+          setTimeout(() => {
+            this.scrollToBottom();
+          });
         });
+
+        this.MarkAsRead();
       }
     });
   }
@@ -54,10 +62,21 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
     this.SocketService.leaveRoom(this.ChatRoomId);
   }
 
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom() {
+    const chat = document.getElementById("chat-box");
+    if (chat) {
+      chat.scrollTop = chat.scrollHeight;
+    }
+  }
+
   async LoadMessages() {
     const request: MessageRequestData = { ChatRoomId: this.ChatRoomId }
     try {
-      const result = await this.ChatService.GetMessages(request);
+      const result = await this.ChatAppService.GetMessages(request);
       this.Messages = result.Messages;
       this.NextCursor = result.NextCursor;
       this.HasMore = result.HasMore;
@@ -73,7 +92,7 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
     if (!this.NextCursor) return;
     const request: MessageRequestData = { ChatRoomId: this.ChatRoomId, Cursor: this.NextCursor }
     try {
-      const result = await this.ChatService.GetMessages(request);
+      const result = await this.ChatAppService.GetMessages(request);
       this.Messages = [...result.Messages, ...this.Messages];
       this.NextCursor = result.NextCursor;
       this.HasMore = result.HasMore;
@@ -91,13 +110,26 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
       Content: this.newMessage,
       ContentType: MessageContentType.TEXT,
       SenderId: this.AppStateService.userId() ?? "",
+      SenderName: this.AppStateService.user()?.FullName ?? "Unknown"
     }
     try {
-      await this.ChatService.SendMessage(request);
+      await this.ChatAppService.SendMessage(request);
       this.newMessage = '';
       this.RefreshDetectChanges();
     } catch (err: HttpErrorResponse | any) {
       this.SwalError('เกิดข้อผิดพลาด', err.error?.message || err.message || 'เกิดข้อผิดพลาดในการส่งข้อความ');
+    }
+  }
+
+  async MarkAsRead() {
+    try {
+      const request: ReadMessagesRequest = {
+        ChatRoomId: this.ChatRoomId,
+        UserId: this.AppStateService.userId() ?? "",
+      }
+      await this.ChatAppService.MarkAsRead(request);
+    } catch (err: HttpErrorResponse | any) {
+      this.SwalError('เกิดข้อผิดพลาด', err.error?.message || err.message || 'เกิดข้อผิดพลาดในการทำเครื่องหมายข้อความว่าอ่านแล้ว');
     }
   }
 }

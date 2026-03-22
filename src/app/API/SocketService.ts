@@ -13,8 +13,16 @@ export class SocketService {
         this.socket = io(environment.apiUrl.replace('/api', ''));
     }
 
+    onNewMessageNotify(callback: (msg: any) => void) {
+        this.socket.on('new-message-notify', callback);
+    }
+
     joinRoom(roomId: string) {
         this.socket.emit('join-room', roomId);
+    }
+
+    joinUser(userId: string) {
+        this.socket.emit("join-user", userId);
     }
 
     leaveRoom(roomId: string) {
