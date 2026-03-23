@@ -34,6 +34,11 @@
                         <span>{{ msg.Content }}</span>
                         <span class="text-xs mt-2">{{ msg.CreatedAt | date:'shortTime' }}</span>
                     </div>
+                    @if($last && msg.SenderId == this.AppStateService.userId()){
+                    <div class="text-base mt-1">
+                        {{IsSended ? "ส่งแล้ว" : "กำลังส่ง..." }}
+                    </div>
+                    }
                 </div>
             </div>
             }

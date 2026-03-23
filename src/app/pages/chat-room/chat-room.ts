@@ -45,6 +45,11 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
 
         this.SocketService.offNewMessage();
         this.SocketService.onNewMessage((msg) => {
+          if (msg.SenderId == this.AppStateService.userId()) {
+            this.IsSended = true;
+            return;
+          }
+
           this.Messages.push(msg);
           this.MarkAsRead();
           this.RefreshDetectChanges();
@@ -91,7 +96,7 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
     const chat = document.getElementById("chat-box") as HTMLDivElement;
     const prevHeight = chat.scrollHeight;
     if (!this.NextCursor && !chat) return;
-    
+
     const request: MessageRequestData = { ChatRoomId: this.ChatRoomId, Cursor: this.NextCursor }
     try {
       const result = await this.ChatAppService.GetMessages(request);
@@ -109,8 +114,10 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
     }
   }
 
+  IsSended = true;
   async SendMessage() {
     if (!this.newMessage.trim()) return;
+    this.IsSended = false;
     const request: SendMessagesRequest = {
       ChatRoomId: this.ChatRoomId,
       Content: this.newMessage,
@@ -118,6 +125,18 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
       SenderId: this.AppStateService.userId() ?? "",
       SenderName: this.AppStateService.user()?.FullName ?? "Unknown"
     }
+
+    this.Messages.push({
+      SenderId: request.SenderId,
+      SenderName: request.SenderName,
+      Content: request.Content, ContentType:
+        request.ContentType,
+      CreatedAt: new Date(),
+      ChatRoomId: request.ChatRoomId
+    } as MessageData);
+    setTimeout(() => {
+      this.scrollToBottom();
+    });
     try {
       await this.ChatAppService.SendMessage(request);
       this.newMessage = '';
