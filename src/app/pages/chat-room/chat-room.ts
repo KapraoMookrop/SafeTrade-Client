@@ -62,10 +62,6 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
     this.SocketService.leaveRoom(this.ChatRoomId);
   }
 
-  ngAfterViewChecked() {
-    this.scrollToBottom();
-  }
-
   scrollToBottom() {
     const chat = document.getElementById("chat-box");
     if (chat) {
@@ -83,6 +79,9 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
       this.CurrentUserName = result.CurrentUserName;
       this.OtherUserName = result.OtherUserName;
       this.RefreshDetectChanges();
+      setTimeout(() => {
+        this.scrollToBottom();
+      });
     } catch (err: HttpErrorResponse | any) {
       this.SwalError('เกิดข้อผิดพลาด', err.error?.message || err.message || 'เกิดข้อผิดพลาดในการโหลดข้อความ');
     }

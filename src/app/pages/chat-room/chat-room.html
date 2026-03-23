@@ -41,8 +41,10 @@
     </div>
 </div>
 <div class="chat-input">
-    <input class="form-control" [(ngModel)]="newMessage" placeholder="พิมพ์ข้อความ..." />
-    <button class="btn btn-primary d-flex justify-content-center align-items-center" (click)="SendMessage()">
-        <i class="fa-solid fa-paper-plane"></i>
-    </button>
+    <div class="container-md d-flex gap-3">
+        <input class="form-control" [(ngModel)]="newMessage" placeholder="พิมพ์ข้อความ..." />
+        <button class="btn btn-primary d-flex justify-content-center align-items-center" (click)="SendMessage()">
+            <i class="fa-solid fa-paper-plane"></i>
+        </button>
+    </div>
 </div>
