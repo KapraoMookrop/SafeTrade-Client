@@ -88,7 +88,10 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
   }
 
   async LoadMore() {
-    if (!this.NextCursor) return;
+    const chat = document.getElementById("chat-box") as HTMLDivElement;
+    const prevHeight = chat.scrollHeight;
+    if (!this.NextCursor && !chat) return;
+    
     const request: MessageRequestData = { ChatRoomId: this.ChatRoomId, Cursor: this.NextCursor }
     try {
       const result = await this.ChatAppService.GetMessages(request);
@@ -96,6 +99,10 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
       this.NextCursor = result.NextCursor;
       this.HasMore = result.HasMore;
       this.RefreshDetectChanges();
+      setTimeout(() => {
+        const newHeight = chat.scrollHeight;
+        chat.scrollTop = newHeight - prevHeight;
+      });
     }
     catch (err: HttpErrorResponse | any) {
       this.SwalError('เกิดข้อผิดพลาด', err.error?.message || err.message || 'เกิดข้อผิดพลาดในการโหลดข้อความ');
