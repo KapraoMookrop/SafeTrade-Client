@@ -10,22 +10,31 @@
     </div>
     <div class="card-chat">
         @for (chatRoom of ChatRooms; track $index) {
+        @let room = AppStateService.allChatRooms().find(r => r.ChatRoomId === chatRoom.ChatRoomId);
+
+        @if (room) {
         <div class="card-chat-item cursor-pointer" (click)="NavigateTo(`chat-room/${chatRoom.ChatRoomId}`)">
             <div class="d-flex gap-3 align-items-center">
-                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="User Avatar" class="avatar">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="avatar">
                 <div class="chat-info">
                     <h5 class="mb-1">{{ chatRoom.UserName }}</h5>
-                    <p class="mb-0 text-muted">{{ chatRoom.LastMessage }}</p>
-                    <!-- <p class="mb-0 text-muted">{{ this.AppStateService.allChatRooms().find(r => r.ChatRoomId === chatRoom.ChatRoomId)?.Content }}</p> -->
+                    <p class="mb-0 text-muted">{{ room.LastMessage }}</p>
                 </div>
             </div>
+
             <div class="d-flex flex-column align-items-end">
-                <span class="text-muted text-base">{{ chatRoom.LastMessageAt | date:'shortTime' }}</span>
-                @if(chatRoom.CountUnread > 0) {
-                <span class="custom-badge text-sm">{{ chatRoom.CountUnread }}</span>
+                <span class="text-muted text-base">
+                    {{ room.LastMessageAt | date:'shortTime' }}
+                </span>
+
+                @if (room.CountUnread > 0) {
+                <span class="custom-badge text-sm">
+                    {{ room.CountUnread }}
+                </span>
                 }
             </div>
         </div>
+        }
         }
     </div>
 </div>

@@ -32,13 +32,7 @@ export class Chat extends BaseComponent implements OnInit {
     try {
       const result = await this.ChatAppService.GetAllChatRooms();
       this.ChatRooms = result;
-
-      // const lastMessages = result.map(t => ({
-      //   ChatRoomId: t.ChatRoomId,
-      //   Content: t.LastMessage,
-      //   CreatedAt: t.LastMessageAt,
-      // } as MessageData));
-      // this.ChatService.updateLastMessages(lastMessages);
+      this.ChatService.setLastMessages(result);
     } catch (error: HttpErrorResponse | any) {
       this.SwalError('เกิดข้อผิดพลาด', error.error?.message || error.message || 'เกิดข้อผิดพลาดในการโหลดห้องแชท');
     }

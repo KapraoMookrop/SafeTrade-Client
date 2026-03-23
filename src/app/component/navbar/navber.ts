@@ -24,4 +24,8 @@ export class Navbar extends BaseComponent implements OnInit {
   getLogoUser() {
     return this.AppStateService.user()?.FullName.replaceAll("นาย", "").replaceAll("นางสาว", "").replaceAll("นาง", "").charAt(0) || "";
   }
+
+  get unreadCount() {
+    return this.AppStateService.allChatRooms().reduce((sum, room) => sum + (room.CountUnread ?? 0), 0);
+  }
 }

@@ -46,9 +46,6 @@ export class App {
         this.SocketService.connect();
       }
       this.SocketService.joinUser(this.stateService.userId() || '');
-      this.SocketService.onNewMessageNotify((data) => {
-        // this.ChatService.pushMessage(data);
-      });
     });
   }
 
