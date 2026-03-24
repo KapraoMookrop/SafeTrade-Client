@@ -117,7 +117,6 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
   IsSended = true;
   async SendMessage() {
     if (!this.newMessage.trim()) return;
-    this.newMessage = '';
     this.IsSended = false;
     const request: SendMessagesRequest = {
       ChatRoomId: this.ChatRoomId,
@@ -126,7 +125,7 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
       SenderId: this.AppStateService.userId() ?? "",
       SenderName: this.AppStateService.user()?.FullName ?? "Unknown"
     }
-
+    
     this.Messages.push({
       SenderId: request.SenderId,
       SenderName: request.SenderName,
@@ -138,6 +137,7 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.scrollToBottom();
     });
+    this.newMessage = '';
     try {
       await this.ChatAppService.SendMessage(request);
       this.RefreshDetectChanges();
