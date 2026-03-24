@@ -117,6 +117,7 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
   IsSended = true;
   async SendMessage() {
     if (!this.newMessage.trim()) return;
+    this.newMessage = '';
     this.IsSended = false;
     const request: SendMessagesRequest = {
       ChatRoomId: this.ChatRoomId,
@@ -139,7 +140,6 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
     });
     try {
       await this.ChatAppService.SendMessage(request);
-      this.newMessage = '';
       this.RefreshDetectChanges();
     } catch (err: HttpErrorResponse | any) {
       this.SwalError('เกิดข้อผิดพลาด', err.error?.message || err.message || 'เกิดข้อผิดพลาดในการส่งข้อความ');
