@@ -510,12 +510,22 @@ body {
   cursor: pointer;
 }
 
+.mat-mdc-dialog-surface.mdc-dialog__surface {
+  border-radius: 24px !important;
+  padding: 2rem !important;
+  font-family: 'Kanit', sans-serif !important;
+  background-color: var(--bg-main) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+  width: 500px;
+}
+
 .swal2-popup {
   border-radius: 24px !important;
   padding: 2rem !important;
   font-family: 'Kanit', sans-serif !important;
   background-color: var(--bg-main) !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+  width: 500px;
 }
 
 .swal2-title {

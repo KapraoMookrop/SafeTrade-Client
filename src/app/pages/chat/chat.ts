@@ -2,14 +2,11 @@ import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { BaseComponent } from '../../core/BaseComponent';
 import { SocketService } from '../../API/SocketService';
 import { ChatAppService } from '../../API/ChatAppService';
-import { MessageRequestData } from '../../types/MessageRequestData';
-import { MessageData } from '../../types/MessageData';
-import { SendMessagesRequest } from '../../types/SendMessagesRequest';
-import { MessageContentType } from '../../types/Enum';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChatRoomData } from '../../types/ChatRoomData';
 import { CommonModule } from '@angular/common';
+import { CreateDealDialog } from '../../component/dialog/deal/create-deal-dialog/create-deal-dialog';
 
 @Component({
   selector: 'app-chat',
@@ -36,5 +33,16 @@ export class Chat extends BaseComponent implements OnInit {
     } catch (error: HttpErrorResponse | any) {
       this.SwalError('เกิดข้อผิดพลาด', error.error?.message || error.message || 'เกิดข้อผิดพลาดในการโหลดห้องแชท');
     }
+  }
+
+  async OpenCreateDealDialog() {
+    const dialogRef = this.DialogService.open(CreateDealDialog, {
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('สร้างดีลใหม่:', result);
+      }
+    });
   }
 }

@@ -10,10 +10,11 @@ import { jwtDecode } from "jwt-decode";
 import { KycStatus, UserRole, UserStatus } from './types/Enum';
 import { SocketService } from './API/SocketService';
 import { ChatService } from '../app/core/ChatService';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
-  imports: [FormsModule, Navbar, RouterOutlet],
+  imports: [FormsModule, Navbar, RouterOutlet, MatDialogModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

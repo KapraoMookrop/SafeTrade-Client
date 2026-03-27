@@ -5,6 +5,7 @@ import { AppStateService } from "./AppStateService";
 import { ChangeDetectorRef, inject } from '@angular/core';
 import Swal from 'sweetalert2';
 import { ChatService } from "./ChatService";
+import { MatDialog } from "@angular/material/dialog";
 
 export class BaseComponent {
     protected Router = inject(Router);
@@ -14,6 +15,7 @@ export class BaseComponent {
     protected AppStateService = inject(AppStateService);
     protected Cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
     protected ChatService = inject(ChatService);
+    protected DialogService = inject(MatDialog);
     constructor() {
     }
 
