@@ -31,7 +31,6 @@
                 <i class="fa-regular fa-bell"></i>
                 @if( Notifications.length > 0 && !isReadAllNotification){
                 <span class="badge">{{Notifications.length}} </span>
-                }
                 <div class="notification-dropdown">
                     <div class="text-sm text-end cursor-pointer py-2 border-1 border-bottom" (click)="MarkAllAsRead()">
                         ทำเครื่องหมายว่าอ่านแล้ว</div>
@@ -62,6 +61,7 @@
                     </div>
                     }
                 </div>
+                }
             </div>
             <div class="nav-item">
                 <a class="profile" routerLink="/profile" routerLinkActive="active">
