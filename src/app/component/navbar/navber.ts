@@ -46,6 +46,7 @@ export class Navbar extends BaseComponent implements OnInit {
     try {
       const result = await this.CoreAppService.GetNotifications();
       this.Notifications = result;
+      this.RefreshDetectChanges();
     } catch (error: HttpErrorResponse | any) {
       this.SwalError('เกิดข้อผิดพลาด', error.error?.message || error.message || 'ไม่สามารถโหลดการแจ้งเตือนได้ในขณะนี้');
     }
@@ -68,6 +69,7 @@ export class Navbar extends BaseComponent implements OnInit {
     try {
       await this.CoreAppService.MarkAllNotificationsAsRead();
       this.Notifications.forEach(n => n.IsRead = true);
+      this.RefreshDetectChanges();
     } catch (error: HttpErrorResponse | any) {
       this.SwalError('เกิดข้อผิดพลาด', error.error?.message || error.message || 'ไม่สามารถทำเครื่องหมายว่าอ่านแล้วทั้งหมดได้ในขณะนี้');
     }
