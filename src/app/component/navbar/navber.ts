@@ -34,8 +34,8 @@ export class Navbar extends BaseComponent implements OnInit {
     return this.AppStateService.user()?.FullName.replaceAll("นาย", "").replaceAll("นางสาว", "").replaceAll("นาง", "").charAt(0) || "";
   }
 
-  get isReadAllNotification() {
-    return this.Notifications.every(n => n.IsRead);
+  get countNotReadNotification() {
+    return this.Notifications.filter(n => !n.IsRead).length;
   }
 
   get unreadCount() {

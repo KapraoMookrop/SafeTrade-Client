@@ -29,8 +29,8 @@
             <div class="nav-item text-2xl cursor-pointer position-relative notification"
                 [class.show]="IsOpenNotification">
                 <i class="fa-regular fa-bell"></i>
-                @if( Notifications.length > 0 && !isReadAllNotification){
-                <span class="badge">{{Notifications.length}} </span>
+                @if( countNotReadNotification > 0){
+                <span class="badge">{{countNotReadNotification}} </span>
                 <div class="notification-dropdown">
                     <div class="text-sm text-end cursor-pointer py-2 border-1 border-bottom" (click)="MarkAllAsRead()">
                         ทำเครื่องหมายว่าอ่านแล้ว</div>
