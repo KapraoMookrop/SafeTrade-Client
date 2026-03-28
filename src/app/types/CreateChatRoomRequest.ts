@@ -1,7 +1,7 @@
 import { ChatRoomStatus } from "./Enum.js";
 
 export interface CreateChatRoomRequest {
-    BuyerId: string;
-    SellerId: string;
+    CreatorId: string;
+    InviteeId: string;
     Status: ChatRoomStatus
 }

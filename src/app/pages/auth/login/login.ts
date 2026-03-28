@@ -128,6 +128,7 @@ export class Login extends BaseComponent implements OnInit {
     try {
       await this.UserAppService.Signup(this.UserSignUpRequest);
       await this.SwalSuccess('สมัครสมาชิกสำเร็จ', 'กรุณาตรวจสอบอีเมลเพื่อยืนยันบัญชีของคุณ');
+      this.NavigateTo('/login');
       this.isLogin = true;
     } catch (err: HttpErrorResponse | any) {
       await this.SwalError('สมัครสมาชิกไม่สำเร็จ', err.error?.message || err.message || 'เกิดข้อผิดพลาดในการสมัครสมาชิก');

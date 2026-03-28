@@ -2,11 +2,13 @@ import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { BaseComponent } from '../../core/BaseComponent';
 import { SocketService } from '../../API/SocketService';
 import { ChatAppService } from '../../API/ChatAppService';
+import { DealAppService } from '../../API/DealAppService';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChatRoomData } from '../../types/ChatRoomData';
 import { CommonModule } from '@angular/common';
 import { CreateDealDialog } from '../../component/dialog/deal/create-deal-dialog/create-deal-dialog';
+import { CreateChatRoomRequest } from '../../types/CreateChatRoomRequest';
 
 @Component({
   selector: 'app-chat',
@@ -16,7 +18,8 @@ import { CreateDealDialog } from '../../component/dialog/deal/create-deal-dialog
 export class Chat extends BaseComponent implements OnInit {
 
   constructor(private SocketService: SocketService,
-    private ChatAppService: ChatAppService) {
+    private ChatAppService: ChatAppService,
+    private DealAppService: DealAppService,) {
     super();
   }
 
@@ -42,7 +45,22 @@ export class Chat extends BaseComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('สร้างดีลใหม่:', result);
+        const rq: CreateChatRoomRequest = {
+          CreatorId: this.AppStateService.userId() ?? "",
+          InviteeId: result.userId,
+        } as CreateChatRoomRequest;
+        this.CreateChatRoom(rq);
       }
     });
+  }
+
+  async CreateChatRoom(rq: CreateChatRoomRequest) {
+    try {
+      await this.DealAppService.CreateChatRoom(rq);
+      this.SwalSuccess('สำเร็จ', 'สร้างห้องแชทสำเร็จ');
+      this.LoadChatRooms();
+    } catch (err: HttpErrorResponse | any) {
+      this.SwalError('เกิดข้อผิดพลาด', err.error?.message || err.message || 'เกิดข้อผิดพลาดในการโหลดข้อความ');
+    }
   }
 }

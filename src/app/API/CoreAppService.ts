@@ -7,6 +7,8 @@ import { DistrictData } from '../types/DistrictData';
 import { Verify2FAType } from '../types/Enum';
 import { LoginResponseData } from '../types/LoginResponseData';
 import { environment } from '../../environments/environment';
+import { DropDownData } from '../types/DropDownData';
+import { NotificationData } from '../types/NotificationData';
 
 @Injectable({
     providedIn: 'root'
@@ -111,4 +113,31 @@ export class CoreAppService {
         const response = await lastValueFrom(observable);
         return response;
     }
+
+    async FindUsers(textSearch: string): Promise<DropDownData[]> {
+        const observable = this.http.post<DropDownData[]>(
+            `${this.baseUrl}/core/FindUsers`, 
+            { textSearch }
+        );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
+
+    async GetNotifications(): Promise<NotificationData[]> {
+        const observable = this.http.get<NotificationData[]>(
+            `${this.baseUrl}/core/GetNotifications`
+        );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
+
+    async MarkAllNotificationsAsRead(): Promise<void> {
+        const observable = this.http.post<void>(
+            `${this.baseUrl}/core/MarkAllNotificationsAsRead`,
+            {}
+        );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
+
 }

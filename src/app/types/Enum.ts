@@ -107,3 +107,9 @@ export enum Verify2FAType {
   VERIFYENABLE = "VERIFYENABLE",
   VERIFY = "VERIFY",
 }
+
+export enum NotificationType {
+  CHAT_INVITE = "CHAT_INVITE",
+  DEAL_UPDATE = "DEAL_UPDATE",
+  SYSTEM_ALERT = "SYSTEM_ALERT",
+}

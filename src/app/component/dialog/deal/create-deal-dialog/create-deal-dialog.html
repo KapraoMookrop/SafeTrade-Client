@@ -1,10 +1,25 @@
-<h2 class="swal2-title">เพิ่มข้อมูล</h2>
-
-<div class="swal2-html-container">
-    <input type="text" [(ngModel)]="name" class="swal2-input" placeholder="ชื่อ">
-</div>
-
-<div class="swal2-actions">
-    <button class="swal2-cancel" (click)="close()">ยกเลิก</button>
-    <button class="swal2-confirm" (click)="submit()">บันทึก</button>
+<div class="dialog">
+    <div class="dialog-header">
+        <div class="text-3xl font-medium">สร้างแชทใหม่</div>
+    </div>
+    <div class="dialog-body">
+        <div class="swal2-html-container">
+            <ng-select [items]="Users" bindLabel="DisplayText" bindValue="Id" [searchable]="true" [clearable]="true"
+                [(ngModel)]="UserId" class="w-100 mt-2" placeholder="ค้นหาผู้ติดต่อ..." (search)="FindUsers($event)">
+                <ng-template ng-option-tmp let-item="item">
+                    <div class="d-flex flex-column">
+                        <div>{{ item.DisplayText }}</div>
+                    </div>
+                </ng-template>
+            </ng-select>
+        </div>
+        <div class="text-danger text-sm">
+            หากคุณเป็นผู้ขาย ระบบจะแสดงเฉพาะผู้ใช้ที่มีบทบาทเป็นผู้ซื้อ <br/>
+            หากคุณเป็นผู้ซื้อ ระบบจะแสดงเฉพาะผู้ใช้ที่มีบทบาทเป็นผู้ขาย
+        </div>
+    </div>
+    <div class="dialog-footer">
+        <button class="swal2-cancel" (click)="close()">ยกเลิก</button>
+        <button class="swal2-confirm" (click)="submit()">สร้างแชท</button>
+    </div>
 </div>
