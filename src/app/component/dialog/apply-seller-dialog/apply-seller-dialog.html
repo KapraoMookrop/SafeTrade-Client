@@ -1,0 +1,106 @@
+<div class="dialog" style="height: 70vh;">
+    <div class="dialog-header">
+        <div class="text-start mt-3">
+            <div class="text-3xl font-medium text-center">สมัครเป็นผู้ขาย</div>
+            <div class="d-flex align-items-center justify-content-between mt-2 w-100">
+                <div class="step" [class.active]="step >= 1">
+                    <div class="step-icon">1</div>
+                    <div class="text-sm">ข้อมูลส่วนตัว</div>
+                </div>
+                <div class="step" [class.active]="step >= 2">
+                    <div class="step-icon">2</div>
+                    <div class="text-sm">ข้อมูลบัญชีธนาคาร</div>
+                </div>
+                <div class="step" [class.active]="step >= 3">
+                    <div class="step-icon">3</div>
+                    <div class="text-sm">ยืนยันการสมัคร</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dialog-body">
+        @if(step === 1){
+        <div class="fade-slide">
+            <div class="mb-4">
+                <label class="form-label text-base">
+                    <span class="text-danger">*</span> อัพโหลดรูปภาพหน้าบัตรประชาชน (แนวนอน)
+                </label>
+
+                <div class="mb-2 preview-container" (click)="idInput.click()">
+                    @if (idCardPreview) {
+                    <img [src]="idCardPreview" class="preview-img" alt="ID Card Preview">
+                    } @else {
+                    <i class="bi bi-camera" style="font-size: 2rem;"></i>
+                    <span class="mt-1">คลิกเพื่ออัพโหลดรูป</span>
+                    }
+                </div>
+
+                <input #idInput class="form-control d-none" type="file" (change)="onFileSelected($event, 'idCard')"
+                    accept="image/*">
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label text-base">
+                    <span class="text-danger">*</span> อัพโหลดรูปภาพตนเองคู่กับบัตรประชาชน (แนวนอน)
+                </label>
+
+                <div class="mb-2 preview-container" (click)="selfieInput.click()">
+                    @if (selfiePreview) {
+                    <img [src]="selfiePreview" class="preview-img" alt="Selfie Preview">
+                    } @else {
+                    <i class="bi bi-person-bounding-box" style="font-size: 2rem;"></i>
+                    <span class="mt-1">คลิกเพื่ออัพโหลดรูปคู่กับบัตรประชาชน</span>
+                    }
+                </div>
+
+                <input #selfieInput class="form-control d-none" type="file" (change)="onFileSelected($event, 'selfie')"
+                    accept="image/*">
+            </div>
+        </div>
+        }
+        <!-- STEP 2 -->
+        @if(step === 2){
+        <div class="fade-slide">
+            <div class="swal2-html-container">
+                <ng-select [items]="Banks" bindLabel="DisplayText" bindValue="Id" [searchable]="true" [clearable]="true"
+                    [(ngModel)]="BankId" class="w-100 mt-2" placeholder="กรอกธนาคารของคุณ..."
+                    (search)="FindBanks($event)">
+                    <ng-template ng-option-tmp let-item="item">
+                        <div class="d-flex flex-column">
+                            <div>{{ item.DisplayText }}</div>
+                        </div>
+                    </ng-template>
+                </ng-select>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">
+                    <i class="fa-solid fa-building-columns"></i>
+                </span>
+
+                <div class="form-floating">
+                    <input type="text" class="form-control" placeholder="เลขบัญชีธนาคาร" name="bankAccount"
+                        mask="000-0-00000-0"> <label for="bankAccount">เลขบัญชีธนาคาร</label>
+                </div>
+            </div>
+        </div>
+        }
+
+        <!-- STEP 3 -->
+        @if(step === 3){
+
+        <div class="fade-slide">
+
+        </div>
+        }
+    </div>
+    <div class="dialog-footer">
+        @if(step > 1){
+        <button class="swal2-cancel" (click)="prevStep()">
+            ย้อนกลับ
+        </button>
+        }@else {
+        <button class="swal2-cancel" (click)="close()">ยกเลิก</button>
+        }
+        <button class="swal2-confirm" (click)="nextStep()">ต่อไป</button>
+    </div>
+</div>

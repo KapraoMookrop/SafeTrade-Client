@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChatRoomData } from '../../types/ChatRoomData';
 import { CommonModule } from '@angular/common';
-import { CreateDealDialog } from '../../component/dialog/deal/create-deal-dialog/create-deal-dialog';
+import { CreateChatDialog } from '../../component/dialog/create-chat-dialog/create-chat-dialog';
 import { CreateChatRoomRequest } from '../../types/CreateChatRoomRequest';
 
 @Component({
@@ -38,13 +38,13 @@ export class Chat extends BaseComponent implements OnInit {
     }
   }
 
-  async OpenCreateDealDialog() {
-    const dialogRef = this.DialogService.open(CreateDealDialog, {
+  async OpenCreateChatDialog() {
+    const dialogRef = this.DialogService.open(CreateChatDialog, {
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('สร้างดีลใหม่:', result);
+        console.log('สร้างห้องแชทใหม่:', result);
         const rq: CreateChatRoomRequest = {
           CreatorId: this.AppStateService.userId() ?? "",
           InviteeId: result.userId,

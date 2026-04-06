@@ -123,6 +123,15 @@ export class CoreAppService {
         return response;
     }
 
+    async FindBanks(textSearch: string): Promise<DropDownData[]> {
+        const observable = this.http.post<DropDownData[]>(
+            `${this.baseUrl}/core/FindBanks`, 
+            { textSearch }
+        );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
+
     async GetNotifications(): Promise<NotificationData[]> {
         const observable = this.http.get<NotificationData[]>(
             `${this.baseUrl}/core/GetNotifications`

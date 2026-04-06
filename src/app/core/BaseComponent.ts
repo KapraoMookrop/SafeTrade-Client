@@ -89,15 +89,28 @@ export class BaseComponent {
         });
     }
 
-    protected async Swaltoast(text: string, icon: 'success' | 'error' | 'warning' | 'info' | 'question', timer: number = 2000) {
-        await Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: icon,
-            text: text,
-            showConfirmButton: false,
-            timer: timer
-        });
+    protected async Swaltoast(text: string, icon: 'success' | 'error' | 'warning' | 'info' | 'question', timer: number = 2000, isPopup: boolean = false) {
+        if (isPopup) {
+            const overlay = document.querySelector('.cdk-overlay-container');
+            await Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: icon,
+                text: text,
+                showConfirmButton: false,
+                timer: timer,
+                target: overlay as HTMLElement || 'body'
+            });
+        } else {
+            await Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: icon,
+                text: text,
+                showConfirmButton: false,
+                timer: timer,
+            });
+        }
     }
 
     protected async Swal2FAAlert() {

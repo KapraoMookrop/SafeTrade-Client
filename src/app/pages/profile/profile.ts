@@ -5,6 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CoreAppService } from '../../API/CoreAppService';
 import { Verify2FAType } from '../../types/Enum';
 import { BaseComponent } from '../../core/BaseComponent';
+import { ApplySellerDialog } from '../../component/dialog/apply-seller-dialog/apply-seller-dialog';
 
 @Component({
   selector: 'app-profile',
@@ -117,5 +118,16 @@ export class Profile extends BaseComponent {
     } catch (err: HttpErrorResponse | any) {
       await this.SwalError('เกิดข้อผิดพลาด', err.error?.message || 'เกิดข้อผิดพลาดในการลบบัญชี');
     }
+  }
+
+  async OpenApplySellerDialog() {
+    const dialogRef = this.DialogService.open(ApplySellerDialog, {
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
   }
 }

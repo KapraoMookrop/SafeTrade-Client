@@ -1,11 +1,11 @@
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { BaseComponent } from '../../../../core/BaseComponent';
+import { BaseComponent } from '../../../core/BaseComponent';
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { DropDownData } from '../../../../types/DropDownData';
-import { CoreAppService } from '../../../../API/CoreAppService';
+import { DropDownData } from '../../../types/DropDownData';
+import { CoreAppService } from '../../../API/CoreAppService';
 
 @Component({
     selector: 'app-create-deal-dialog',

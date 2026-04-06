@@ -14,10 +14,11 @@ import { Verify2FAType } from '../../../types/Enum';
 import { LoginResponseData } from '../../../types/LoginResponseData';
 import { UserLoginDataRequest } from '../../../types/UserLoginDataRequest';
 import { BaseComponent } from '../../../core/BaseComponent';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, CommonModule, NgSelectModule],
+  imports: [FormsModule, CommonModule, NgSelectModule, NgxMaskDirective],
   providers: [],
   templateUrl: './login.html',
 })
