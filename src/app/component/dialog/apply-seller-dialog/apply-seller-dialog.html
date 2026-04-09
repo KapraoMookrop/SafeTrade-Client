@@ -31,7 +31,10 @@
                     <img [src]="idCardPreview" class="preview-img" alt="ID Card Preview">
                     } @else {
                     <i class="bi bi-camera" style="font-size: 2rem;"></i>
-                    <span class="mt-1">คลิกเพื่ออัพโหลดรูป</span>
+                    <div class="mt-1 text-center text-base">
+                        <i class="fa-solid fa-address-card text-3xl mb-1"></i>
+                        <div>คลิกเพื่ออัพโหลดรูปบัตรประชาชน</div>
+                    </div>
                     }
                 </div>
 
@@ -49,7 +52,10 @@
                     <img [src]="selfiePreview" class="preview-img" alt="Selfie Preview">
                     } @else {
                     <i class="bi bi-person-bounding-box" style="font-size: 2rem;"></i>
-                    <span class="mt-1">คลิกเพื่ออัพโหลดรูปคู่กับบัตรประชาชน</span>
+                    <div class="mt-1 text-center text-base">
+                        <i class="fa-solid fa-user-check text-3xl mb-1"></i>
+                        <div>คลิกเพื่ออัพโหลดรูปคู่กับบัตรประชาชน</div>
+                    </div>
                     }
                 </div>
 
@@ -63,7 +69,7 @@
         <div class="fade-slide">
             <div class="swal2-html-container">
                 <ng-select [items]="Banks" bindLabel="DisplayText" bindValue="Id" [searchable]="true" [clearable]="true"
-                    [(ngModel)]="BankId" class="w-100 mt-2" placeholder="กรอกธนาคารของคุณ..."
+                    [(ngModel)]="ApplySellerRequestData.BankId" class="w-100 mt-2" placeholder="กรอกธนาคารของคุณ..."
                     (search)="FindBanks($event)">
                     <ng-template ng-option-tmp let-item="item">
                         <div class="d-flex flex-column">
@@ -79,7 +85,7 @@
 
                 <div class="form-floating">
                     <input type="text" class="form-control" placeholder="เลขบัญชีธนาคาร" name="bankAccount"
-                        mask="000-0-00000-0"> <label for="bankAccount">เลขบัญชีธนาคาร</label>
+                        [(ngModel)]="ApplySellerRequestData.BankNumber" mask="000-0-00000-0"> <label for="bankAccount">เลขบัญชีธนาคาร</label>
                 </div>
             </div>
         </div>
@@ -87,9 +93,46 @@
 
         <!-- STEP 3 -->
         @if(step === 3){
-
         <div class="fade-slide">
-
+            <div class="sub-card mt-3">
+                <div class="sub-card-header text-xl">
+                    ตรวจสอบข้อมูลก่อนส่ง
+                </div>
+                <div class="sub-card-body mt-3 d-flex flex-column gap-3">
+                    <div class="sub-card-box">
+                        <div class="text-base text-muted mb-2">รูปบัตรประชาชน</div>
+                        @if(idCardPreview){
+                        <img [src]="idCardPreview" class="preview-img" alt="ID Card Preview">
+                        }
+                    </div>
+                    <div class="sub-card-box">
+                        <div class="text-base text-muted mb-2">รูปคู่กับบัตรประชาชน</div>
+                        @if(selfiePreview){
+                        <img [src]="selfiePreview" class="preview-img" alt="Selfie Preview">
+                        }
+                    </div>
+                    <div class="sub-card-box d-flex justify-content-between align-items-center w-100">
+                        <div>
+                            <div class="text-base text-muted">ธนาคาร</div>
+                            <div class="text-lg text-bold">
+                                กสิกรไทย
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-base text-muted text-end">เลขบัญชี</div>
+                            <div class="text-lg text-bold">
+                                123-4-56789-0
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-card-box">
+                        <div class="text-base text-muted">ชื่อผู้สมัคร : </div>
+                        <div class="text-lg text-bold">
+                            นิรันดร์ ใจดี
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         }
     </div>
@@ -101,6 +144,10 @@
         }@else {
         <button class="swal2-cancel" (click)="close()">ยกเลิก</button>
         }
+        @if(step == 3){
+        <button class="btn btn-secondary" (click)="submit()">ส่งคำขอ</button>
+        }@else{
         <button class="swal2-confirm" (click)="nextStep()">ต่อไป</button>
+        }
     </div>
 </div>

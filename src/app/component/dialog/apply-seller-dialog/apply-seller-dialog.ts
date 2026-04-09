@@ -7,6 +7,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { DropDownData } from '../../../types/DropDownData';
 import { CoreAppService } from '../../../API/CoreAppService';
 import { NgxMaskDirective } from 'ngx-mask';
+import { ApplySellerRequestData } from '../../../types/ApplySellerRequestData';
 
 @Component({
     selector: 'app-apply-seller-dialog',
@@ -14,9 +15,10 @@ import { NgxMaskDirective } from 'ngx-mask';
     templateUrl: './apply-seller-dialog.html',
 })
 export class ApplySellerDialog extends BaseComponent {
-    BankId: string = '';
+    ApplySellerRequestData: ApplySellerRequestData = {} as ApplySellerRequestData;
     Banks: DropDownData[] = [];
     step: number = 1;
+
     idCardPreview: string | ArrayBuffer | null = null;
     selfiePreview: string | ArrayBuffer | null = null;
 
@@ -31,9 +33,7 @@ export class ApplySellerDialog extends BaseComponent {
     }
 
     submit() {
-        this.dialogRef.close({
-            bankId: this.BankId
-        });
+        this.dialogRef.close(this.ApplySellerRequestData);
     }
 
     async FindBanks(event: { term: string; items: any[] }) {
@@ -61,6 +61,12 @@ export class ApplySellerDialog extends BaseComponent {
     onFileSelected(event: any, type: 'idCard' | 'selfie') {
         const file = event.target.files[0];
         if (file) {
+            if (type === 'idCard') {
+                this.ApplySellerRequestData.IdCardImage = file;
+            } else {
+                this.ApplySellerRequestData.SelfieImage = file;
+            }
+
             const reader = new FileReader();
             reader.onload = () => {
                 if (type === 'idCard') {
@@ -71,7 +77,6 @@ export class ApplySellerDialog extends BaseComponent {
                 this.RefreshDetectChanges();
             };
             reader.readAsDataURL(file);
-
         }
     }
 
@@ -83,7 +88,7 @@ export class ApplySellerDialog extends BaseComponent {
         this.step++;
     }
 
-    prevStep(){
+    prevStep() {
         this.step--;
     }
 }

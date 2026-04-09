@@ -197,7 +197,7 @@ export class Login extends BaseComponent implements OnInit {
       const result = await this.CoreAppService.GetProvinces();
       this.ProvinceDatas = result;
     } catch (err: HttpErrorResponse | any) {
-      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ + ${err.error?.message || err.message}`);
+      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาด ${err.error?.message || err.message}`);
     }
   }
 
@@ -206,7 +206,7 @@ export class Login extends BaseComponent implements OnInit {
       const result = await this.CoreAppService.GetDistricts(provinceId);
       this.DistrictDatas = result;
     } catch (err: HttpErrorResponse | any) {
-      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ + ${err.error?.message || err.message}`);
+      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาด ${err.error?.message || err.message}`);
     }
   }
 
@@ -215,7 +215,7 @@ export class Login extends BaseComponent implements OnInit {
       const result = await this.CoreAppService.GetSubDistricts(districtId);
       this.SubDistrictDatas = result;
     } catch (err: HttpErrorResponse | any) {
-      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาด กรุณาติดต่อผู้ดูแลระบบ + ${err.error?.message || err.message}`);
+      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาด ${err.error?.message || err.message}`);
     }
   }
 
@@ -263,7 +263,7 @@ export class Login extends BaseComponent implements OnInit {
       const result = await this.UserAppService.CheckAlreadyExistsEmail(this.UserSignUpRequest.Email);
       return result;
     } catch (err: HttpErrorResponse | any) {
-      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาดในการตรวจสอบอีเมล กรุณาติดต่อผู้ดูแลระบบ + ${err.error?.message || err.message}`);
+      await this.SwalError('เกิดข้อผิดพลาด', `เกิดข้อผิดพลาดในการตรวจสอบอีเมล ${err.error?.message || err.message}`);
       return true;
     }
   }

@@ -6,6 +6,7 @@ import { CoreAppService } from '../../API/CoreAppService';
 import { Verify2FAType } from '../../types/Enum';
 import { BaseComponent } from '../../core/BaseComponent';
 import { ApplySellerDialog } from '../../component/dialog/apply-seller-dialog/apply-seller-dialog';
+import { UserAppService } from '../../API/UserAppService';
 
 @Component({
   selector: 'app-profile',
@@ -14,7 +15,7 @@ import { ApplySellerDialog } from '../../component/dialog/apply-seller-dialog/ap
   templateUrl: './profile.html',
 })
 export class Profile extends BaseComponent {
-  constructor(private CoreAppService: CoreAppService) {
+  constructor(private CoreAppService: CoreAppService, private UserAppService: UserAppService) {
     super();
   }
 
@@ -121,12 +122,16 @@ export class Profile extends BaseComponent {
   }
 
   async OpenApplySellerDialog() {
-    const dialogRef = this.DialogService.open(ApplySellerDialog, {
-    });
+    const dialogRef = this.DialogService.open(ApplySellerDialog, {});
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       if (result) {
-
+        try {
+          await this.UserAppService.ApplySeller(result);
+          this.SwalSuccess('สมัครเป็นผู้ขายสำเร็จ', 'คำขอของคุณถูกส่งไปยังผู้ดูแลระบบแล้ว โปรดรอการอนุมัติ');
+        } catch (err: HttpErrorResponse | any) {
+          this.SwalError('เกิดข้อผิดพลาด', err.error?.message || 'เกิดข้อผิดพลาดในการสมัครเป็นผู้ขาย');
+        }
       }
     });
   }
