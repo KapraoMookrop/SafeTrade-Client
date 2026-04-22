@@ -30,7 +30,26 @@
                             </div>
                         </div>
                     </div>
+                    @if(UserClientData.SellerVerificationStatus == null){
                     <button class="btn btn-primary" (click)="OpenApplySellerDialog()">สมัครเป็นผู้ขาย</button>
+                    }
+
+                    @if (UserClientData.SellerVerificationStatus == "PENDING") {
+                    <span class="btn btn-warning text-white">กำลังรอการตรวจสอบ</span>
+                    }
+
+                    @if (UserClientData.SellerVerificationStatus == "APPROVED" ) {
+                    <span class="btn btn-success text-white">ได้รับการอนุมัติแล้ว</span>
+                    @if(UserClientData.Role == "SELLER"){
+                    <button class="btn btn-primary">เปลี่ยนบัญชีเป็นผู้ซื้อ</button>
+                    }
+                    }
+
+                    @if (UserClientData.SellerVerificationStatus == "REJECTED") {
+                    <span class="btn btn-danger text-white">ถูกปฏิเสธ</span>
+                    <span class="text-sm text-muted">กรุณาติดต่อฝ่ายบริการลูกค้าเพื่อขอข้อมูลเพิ่มเติม</span>
+                    }
+
                 </div>
 
                 <div class="d-flex justify-content-between setting-item">
