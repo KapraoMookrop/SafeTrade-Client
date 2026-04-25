@@ -4,8 +4,32 @@
             จัดการผู้ขาย
         </span>
     </div>
-    <div class="search-card">
+    <div class="card p-3 mt-3">
+        <div class="row g-2">
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="ชื่อผู้ขาย" [(ngModel)]="criteria.FullName">
+            </div>
 
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="Email" [(ngModel)]="criteria.Email">
+            </div>
+
+            <div class="col-md-3">
+                <select class="form-select" [(ngModel)]="criteria.SellerStatus">
+                    <option value="">ทั้งหมด</option>
+                    <option value="PENDING">รอตรวจสอบ</option>
+                    <option value="APPROVED">อนุมัติ</option>
+                    <option value="REJECTED">ปฏิเสธ</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <button class="btn btn-sm btn-primary w-100" (click)="OnSearch()">
+                    ค้นหา
+                </button>
+            </div>
+
+        </div>
     </div>
     <div class="table-responsive">
         <table class="table table-striped">
@@ -15,27 +39,41 @@
                     <th>ชื่อผู้ขาย</th>
                     <th>อีเมล</th>
                     <th class="text-center">หลักฐาน</th>
-                    <th>สถานะ</th>
+                    <th class="text-center">สถานะ</th>
                     <th class="text-center">การกระทำ</th>
                 </tr>
             </thead>
             <tbody>
-                @for (item of [1,2,3,4,5]; track $index) {
+                @for (item of sellers; track $index) {
                 <tr>
-                    <th scope="row">{{item}}</th>
-                    <td>John Doe</td>
-                    <td>
-                        email
-                    </td>
+                    <th>{{ (criteria.Page - 1) * criteria.PageSize + $index + 1 }}</th>
+
+                    <td>{{ item.FullName }}</td>
+
+                    <td>{{ item.Email }}</td>
+
                     <td class="text-center">
                         <div class="d-flex justify-content-center gap-2">
-                            <button class="btn btn-sm btn-outline-info">ภาพบัตรประชาชน</button>
-                            <button class="btn btn-sm btn-outline-info">ภาพเซลฟี่</button>
+                            <button class="btn btn-sm btn-outline-info">
+                                บัตรประชาชน
+                            </button>
+
+                            <button class="btn btn-sm btn-outline-info">
+                                เซลฟี่
+                            </button>
                         </div>
                     </td>
-                    <td>
-                        รอตรวจสอบ
+
+                    <td class="align-middle text-center">
+                        @if(item.SellerStatus == "PENDING") {
+                        <span class="text-box bg-warning text-dark">รอตรวจสอบ</span>
+                        }@else if(item.SellerStatus == "APPROVED") {
+                        <span class="text-box bg-success">อนุมัติ</span>
+                        }@else if(item.SellerStatus == "REJECTED") {
+                        <span class="text-box bg-danger">ปฏิเสธ</span>
+                        }
                     </td>
+
                     <td class="text-center">
                         <div class="d-flex justify-content-center gap-2">
                             <button class="btn btn-sm btn-outline-danger">ปฏิเสธ</button>
@@ -47,4 +85,32 @@
             </tbody>
         </table>
     </div>
+    <nav class="mt-3">
+        <div class="d-flex justify-content-between">
+            <div class="d-flex gap-2 align-items-center">
+                <span>แสดง </span>
+                <select class="form-select" [(ngModel)]="criteria.PageSize" (change)="OnSearch()">
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="50">50</option>
+                    <option value="999">All</option>
+                </select>
+            </div>
+            <ul class="pagination justify-content-center gap-2 m-0">
+                <li class="page-item" [class.disabled]="criteria.Page === 1">
+                    <button class="page-link" (click)="OnPageChange(criteria.Page - 1)">ก่อนหน้า</button>
+                </li>
+
+                <li class="page-item">
+                    <input type="text" class="form-control text-center" style="max-width: 80px;"
+                        [(ngModel)]="criteria.Page" disabled>
+                </li>
+                <li class="page-item" [class.disabled]="criteria.Page >= totalPages">
+                    <button class="page-link" (click)="OnPageChange(criteria.Page + 1)">
+                        ถัดไป
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
 </div>
