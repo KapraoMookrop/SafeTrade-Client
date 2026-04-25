@@ -1,4 +1,4 @@
-import { KycStatus, UserRole, UserStatus } from "./Enum";
+import { KycStatus, SellerVerificationStatus, UserRole, UserStatus } from "./Enum";
 
 export interface UserClientData {
     FullName: string;
@@ -8,4 +8,5 @@ export interface UserClientData {
     KycStatus: KycStatus;
     UserStatus: UserStatus;
     IsEnabled2FA: boolean;
+    SellerVerificationStatus: SellerVerificationStatus;
 }

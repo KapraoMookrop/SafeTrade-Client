@@ -76,7 +76,7 @@ export class App {
         KycStatus: decodeJwt.kycStatus,
         UserStatus: decodeJwt.userStatus,
         IsEnabled2FA: decodeJwt.isEnabled2FA
-      };
+      } as UserClientData;
 
       this.authService.SetUserClient(this.token, userClient, decodeJwt.userId);
 

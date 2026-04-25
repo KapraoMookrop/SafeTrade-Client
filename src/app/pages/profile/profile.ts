@@ -1,11 +1,13 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, NgClass } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CoreAppService } from '../../API/CoreAppService';
-import { Verify2FAType } from '../../types/Enum';
+import { SellerVerificationStatus, Verify2FAType } from '../../types/Enum';
 import { BaseComponent } from '../../core/BaseComponent';
 import { ApplySellerDialog } from '../../component/dialog/apply-seller-dialog/apply-seller-dialog';
+import { UserAppService } from '../../API/UserAppService';
+import { UserClientData } from '../../types/UserClientData';
 
 @Component({
   selector: 'app-profile',
@@ -14,12 +16,13 @@ import { ApplySellerDialog } from '../../component/dialog/apply-seller-dialog/ap
   templateUrl: './profile.html',
 })
 export class Profile extends BaseComponent {
-  constructor(private CoreAppService: CoreAppService) {
+  constructor(private CoreAppService: CoreAppService, private UserAppService: UserAppService) {
     super();
   }
 
+  UserClientData: UserClientData = {} as UserClientData;
   ngOnInit() {
-
+    this.GetUserClientData();
   }
 
   getLogoUser() {
@@ -121,13 +124,29 @@ export class Profile extends BaseComponent {
   }
 
   async OpenApplySellerDialog() {
-    const dialogRef = this.DialogService.open(ApplySellerDialog, {
-    });
+    const dialogRef = this.DialogService.open(ApplySellerDialog, {});
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       if (result) {
-
+        try {
+          await this.UserAppService.ApplySeller(result);
+          this.SwalSuccess('สมัครเป็นผู้ขายสำเร็จ', 'คำขอของคุณถูกส่งไปยังผู้ดูแลระบบแล้ว โปรดรอการอนุมัติ');
+          this.UserClientData.SellerVerificationStatus = SellerVerificationStatus.PENDING;
+          this.RefreshDetectChanges();
+        } catch (err: HttpErrorResponse | any) {
+          this.SwalError('เกิดข้อผิดพลาด', err.error?.message || 'เกิดข้อผิดพลาดในการสมัครเป็นผู้ขาย');
+        }
       }
     });
+  }
+
+  async GetUserClientData() {
+    try {
+      const result = await this.UserAppService.GetUserClientData();
+      this.UserClientData = result;
+      this.RefreshDetectChanges();
+    } catch (err: HttpErrorResponse | any) {
+      await this.SwalError('เกิดข้อผิดพลาด', err.error?.message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลผู้ใช้');
+    }
   }
 }

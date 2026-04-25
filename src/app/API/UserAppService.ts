@@ -5,6 +5,8 @@ import { UserSignUpDataRequest } from '../types/UserSignUpDataRequest';
 import { LoginResponseData } from '../types/LoginResponseData';
 import { environment } from '../../environments/environment';
 import { UserLoginDataRequest } from '../types/UserLoginDataRequest';
+import { ApplySellerRequestData } from '../types/ApplySellerRequestData';
+import { UserClientData } from '../types/UserClientData';
 
 @Injectable({
     providedIn: 'root'
@@ -41,5 +43,31 @@ export class UserAppService {
         );
         const response = await lastValueFrom(observable);
         return response.exists;
+    }
+
+    async ApplySeller(request: ApplySellerRequestData): Promise<void> {
+        const formData = new FormData();
+        formData.append('BankId', request.BankId);
+        formData.append('BankNumber', request.BankNumber);
+        if (request.IdCardImage) {
+            formData.append('IdCardImage', request.IdCardImage);
+        }
+        if (request.SelfieImage) {
+            formData.append('SelfieImage', request.SelfieImage);
+        }
+
+        const observable = this.http.post<void>(
+            `${this.baseUrl}/users/ApplySeller`,
+            formData
+        );
+
+        return await lastValueFrom(observable);
+    }
+
+    async GetUserClientData(): Promise<UserClientData> {
+        const observable = this.http.get<UserClientData>(
+            `${this.baseUrl}/users/GetUserClientData`
+        );
+        return await lastValueFrom(observable);
     }
 }
