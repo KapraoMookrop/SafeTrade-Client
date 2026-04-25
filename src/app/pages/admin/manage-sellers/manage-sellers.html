@@ -1,0 +1,50 @@
+<div class="container-md">
+    <div class="d-flex justify-content-between mt-3">
+        <span class="text-2xl">
+            จัดการผู้ขาย
+        </span>
+    </div>
+    <div class="search-card">
+
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>ชื่อผู้ขาย</th>
+                    <th>อีเมล</th>
+                    <th class="text-center">หลักฐาน</th>
+                    <th>สถานะ</th>
+                    <th class="text-center">การกระทำ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of [1,2,3,4,5]; track $index) {
+                <tr>
+                    <th scope="row">{{item}}</th>
+                    <td>John Doe</td>
+                    <td>
+                        email
+                    </td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-2">
+                            <button class="btn btn-sm btn-outline-info">ภาพบัตรประชาชน</button>
+                            <button class="btn btn-sm btn-outline-info">ภาพเซลฟี่</button>
+                        </div>
+                    </td>
+                    <td>
+                        รอตรวจสอบ
+                    </td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-2">
+                            <button class="btn btn-sm btn-outline-danger">ปฏิเสธ</button>
+                            <button class="btn btn-sm btn-outline-primary">อนุมัติ</button>
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

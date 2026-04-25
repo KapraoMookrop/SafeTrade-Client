@@ -2,10 +2,15 @@
     <div class="container-md d-flex justify-content-between align-items-center">
         <div class="nav-menu">
             <div class="navbar-brand">
-                <a class="d-flex align-items-center text-decoration-none">
+                <div class="d-flex align-items-center text-decoration-none">
                     <img src="img/logo.png" width="120px" class="me-2" alt="logo">
-                </a>
+                    <span class="text-base font-bold icon-admin">
+                        ADMIN
+                    </span>
+                </div>
+
             </div>
+            @if (AppStateService.user()?.Role != "ADMIN") {
             <div class="nav-item">
                 <a routerLink="/home" routerLinkActive="active">
                     <span>หน้าหลัก</span>
@@ -24,8 +29,26 @@
                     <span>ติดตามพัสดุ</span>
                 </a>
             </div>
+            }@else {
+            <div class="nav-item">
+                <a routerLink="/admin/dashboard" routerLinkActive="active">
+                    <span>แผงควบคุม</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a routerLink="/admin/sellers" routerLinkActive="active">
+                    <span>ตรวจสอบผู้ขาย</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a routerLink="/admin/deals" routerLinkActive="active">
+                    <span>ติดตามดีล</span>
+                </a>
+            </div>
+            }
         </div>
         <div class="d-flex gap-3 justify-content-end align-items-center">
+            @if(AppStateService.user()?.Role != "ADMIN") {
             <div class="nav-item text-2xl cursor-pointer position-relative notification"
                 [class.show]="IsOpenNotification">
                 <i class="fa-regular fa-bell"></i>
@@ -62,13 +85,14 @@
                     }
                 </div>
                 }@else{
-                    <div class="notification-dropdown">
-                        <div class="text-sm text-center py-2">
-                            ไม่มีการแจ้งเตือนใหม่
-                        </div>
+                <div class="notification-dropdown">
+                    <div class="text-sm text-center py-2">
+                        ไม่มีการแจ้งเตือนใหม่
                     </div>
+                </div>
                 }
             </div>
+            }
             <div class="nav-item">
                 <a class="profile" routerLink="/profile" routerLinkActive="active">
                     <div class="profile-img">
@@ -83,6 +107,7 @@
 
 <div class="nav-mobile container-fluid d-md-none d-flex">
     <div class="nav-menu">
+        @if(AppStateService.user()?.Role != "ADMIN") {
         <div class="nav-item">
             <a routerLink="/home" routerLinkActive="active">
                 <i class="fa-solid fa-house-chimney"></i>
@@ -107,5 +132,25 @@
                 <div>โปรไฟล์</div>
             </a>
         </div>
+        }@else {
+        <div class="nav-item">
+            <a routerLink="/admin/dashboard" routerLinkActive="active">
+                <i class="fa-solid fa-house-chimney"></i>
+                <div>แผงควบคุม</div>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a routerLink="/admin/sellers" routerLinkActive="active">
+                <i class="fa-solid fa-house-chimney"></i>
+                <div>ตรวจสอบผู้ขาย</div>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a routerLink="/admin/deals" routerLinkActive="active">
+                <i class="fa-solid fa-house-chimney"></i>
+                <div>ติดตามดีล</div>
+            </a>
+        </div>
+        }
     </div>
 </div>

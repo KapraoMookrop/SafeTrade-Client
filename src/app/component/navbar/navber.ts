@@ -27,7 +27,9 @@ export class Navbar extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.LoadNotifications();
+    if (this.AppStateService.user()?.Role != "ADMIN") {
+      this.LoadNotifications();
+    }
   }
 
   getLogoUser() {

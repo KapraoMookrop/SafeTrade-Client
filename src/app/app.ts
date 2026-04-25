@@ -28,7 +28,7 @@ export class App {
     private SocketService: SocketService,
     private ChatService: ChatService) { }
 
-  showNavbarRoutes = ['/home', '/chat', '/tracking', '/profile'];
+  showNavbarRoutes = ['/home', '/chat', '/tracking', '/profile', '/admin/dashboard', '/admin/sellers', '/admin/deals', '/admin/reports'];
 
   shouldShowNavbar() {
     return this.showNavbarRoutes.includes(this.router.url);
@@ -43,6 +43,13 @@ export class App {
       }
 
       await this.loadUserFromToken();
+      if (this.stateService.user()?.Role === "ADMIN") {
+        if (!url.startsWith('/admin')) {
+          this.router.navigate(['/admin/dashboard']);
+        }
+        return;
+      }
+
       if (!this.SocketService.isConnected()) {
         this.SocketService.connect();
       }

@@ -1024,6 +1024,13 @@ body {
   border-radius: 8px;
 }
 
+.icon-admin{
+  background-color: var(--primary);
+  padding: 3px 6px;
+  color: var(--bg-main);
+  border-radius: 10px;
+}
+
 @media (max-width: 1000px) {
   .card-home .card-header {
     font-size: 42px;
