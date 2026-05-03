@@ -4,9 +4,11 @@
             <div class="navbar-brand">
                 <div class="d-flex align-items-center text-decoration-none">
                     <img src="img/logo.png" width="120px" class="me-2" alt="logo">
+                    @if (AppStateService.user()?.Role == "ADMIN") {
                     <span class="text-base font-bold icon-admin">
                         ADMIN
                     </span>
+                    }
                 </div>
 
             </div>

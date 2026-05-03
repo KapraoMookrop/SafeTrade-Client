@@ -1,16 +1,41 @@
-import { Injectable } from "@angular/core";
-import { AppStateService } from "./AppStateService";
+import { Injectable } from '@angular/core';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { Component } from '@angular/core';
+
+@Component({
+  template: `<div class="modal-loading">
+              <div class="loader"></div>
+            </div>`,
+  standalone: true
+})
+export class GlobalLoaderComponent { }
 
 @Injectable({ providedIn: 'root' })
 export class LoadingService {
+  private overlayRef: OverlayRef | null = null;
 
-  constructor(private state: AppStateService) {}
+  constructor(private overlay: Overlay) { }
 
   show() {
-    this.state.isLoading.set(true);
+    if (!this.overlayRef) {
+      this.overlayRef = this.overlay.create({
+        hasBackdrop: true,
+        backdropClass: 'cdk-overlay-dark-backdrop',
+        positionStrategy: this.overlay.position()
+          .global()
+          .centerHorizontally()
+          .centerVertically()
+      });
+
+      this.overlayRef.attach(new ComponentPortal(GlobalLoaderComponent));
+    }
   }
 
   hide() {
-    this.state.isLoading.set(false);
+    if (this.overlayRef) {
+      this.overlayRef.detach();
+      this.overlayRef = null;
+    }
   }
 }

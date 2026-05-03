@@ -44,6 +44,7 @@ export class ManageSellers extends BaseComponent implements OnInit {
       const result = await this.SellerAppService.FindAsync(this.criteria);
       this.sellers = result.Data || result.Data;
       this.totalCount = result.TotalCount || result.TotalCount;
+      await this.RefreshDetectChanges();
     } catch (error: HttpErrorResponse | any) {
       this.SwalError('เกิดข้อผิดพลาด', error.error?.message || error.message);
     }

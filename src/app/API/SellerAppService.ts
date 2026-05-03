@@ -39,8 +39,7 @@ export class SellerAppService {
     async ApproveSeller(sellerId: string): Promise<void> {
         const observable = this.http.post<void>(
             `${this.baseUrl}/admin/Seller/ApproveSellerAsync`,
-            { sellerId },
-            { context: new HttpContext().set(SKIP_LOADING, true) }
+            { sellerId }
         );
         await lastValueFrom(observable);
     }
@@ -48,8 +47,7 @@ export class SellerAppService {
     async RejectSeller(sellerId: string, comment: string): Promise<void> {
         const observable = this.http.post<void>(
             `${this.baseUrl}/admin/Seller/RejectSellerAsync`,
-            { sellerId, comment },
-            { context: new HttpContext().set(SKIP_LOADING, true) }
+            { sellerId, comment }
         );
         await lastValueFrom(observable);
     }
