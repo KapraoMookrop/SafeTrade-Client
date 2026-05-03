@@ -38,7 +38,7 @@
                     <th>#</th>
                     <th>ชื่อผู้ขาย</th>
                     <th>อีเมล</th>
-                    <th class="text-center">หลักฐาน</th>
+                    <th class="text-center">ข้อมูลผู้ขาย</th>
                     <th class="text-center">สถานะ</th>
                     <th class="text-center">การกระทำ</th>
                 </tr>
@@ -54,12 +54,8 @@
 
                     <td class="text-center">
                         <div class="d-flex justify-content-center gap-2">
-                            <button class="btn btn-sm btn-outline-info">
-                                บัตรประชาชน
-                            </button>
-
-                            <button class="btn btn-sm btn-outline-info">
-                                เซลฟี่
+                            <button class="btn btn-sm btn-outline-info" (click)="OpenSellerInfo(item.UserId)">
+                                ดูข้อมูล
                             </button>
                         </div>
                     </td>
@@ -68,9 +64,9 @@
                         @if(item.SellerStatus == "PENDING") {
                         <span class="text-box bg-warning text-dark">รอตรวจสอบ</span>
                         }@else if(item.SellerStatus == "APPROVED") {
-                        <span class="text-box bg-success">อนุมัติ</span>
+                        <span class="text-box text-white bg-success">อนุมัติ</span>
                         }@else if(item.SellerStatus == "REJECTED") {
-                        <span class="text-box bg-danger">ปฏิเสธ</span>
+                        <span class="text-box text-white bg-danger">ปฏิเสธ</span>
                         }
                     </td>
 

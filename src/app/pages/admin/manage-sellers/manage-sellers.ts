@@ -6,6 +6,8 @@ import { BaseComponent } from '../../../core/BaseComponent';
 import { SellerSearchCriteria } from '../../../types/SellerSearchCriteria';
 import { SellerAppService } from '../../../API/SellerAppService';
 import { SellerVerificationStatus } from '../../../types/Enum';
+import { ViewSellerDialog } from '../../../component/dialog/view-seller-dialog/view-seller-dialog';
+import { SellerData } from '../../../types/SellerData';
 
 @Component({
   selector: 'app-manage-sellers',
@@ -14,7 +16,7 @@ import { SellerVerificationStatus } from '../../../types/Enum';
 })
 export class ManageSellers extends BaseComponent implements OnInit {
 
-  sellers: any[] = [];
+  sellers: SellerData[] = [];
   totalCount: number = 0;
 
   criteria: SellerSearchCriteria = {
@@ -58,5 +60,22 @@ export class ManageSellers extends BaseComponent implements OnInit {
     }
     this.criteria.Page = page;
     this.SearchAsync();
+  }
+
+  async OpenSellerInfo(sellerId: string) {
+    try {
+      const sellerData = await this.SellerAppService.GetSellerByIdAsync(sellerId);
+      const dialogRef = this.DialogService.open(ViewSellerDialog, {
+        data: sellerData
+      });
+
+      dialogRef.afterClosed().subscribe(async (result) => {
+        if (result) {
+          await this.SearchAsync();
+        }
+      });
+    } catch (error: HttpErrorResponse | any) {
+      this.SwalError('เกิดข้อผิดพลาด', error.error?.message || error.message);
+    }
   }
 }

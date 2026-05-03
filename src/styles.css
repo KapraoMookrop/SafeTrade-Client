@@ -19,6 +19,10 @@ body {
   font-family: 'Kanit', sans-serif;
 }
 
+.bg-secondary {
+  background-color: var(--bg-input) !important;
+}
+
 .modal-loading {
   position: fixed;
   top: 0;
@@ -30,6 +34,7 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  pointer-events: all;
 }
 
 .modal-loading .loader {
@@ -528,7 +533,7 @@ body {
   font-family: 'Kanit', sans-serif !important;
   background-color: var(--bg-main) !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
-  width: 500px;
+  min-width: 500px;
 }
 
 .swal2-container {

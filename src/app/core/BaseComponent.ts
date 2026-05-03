@@ -73,19 +73,21 @@ export class BaseComponent {
         });
     }
 
-    protected async SwalSuccess(title: string, text: string) {
+    protected async SwalSuccess(title: string, text: string, target: HTMLElement | string = 'body') {
         await Swal.fire({
             icon: 'success',
             title: title,
             text: text,
+            target: target
         });
     }
 
-    protected async SwalError(title: string, text: string) {
+    protected async SwalError(title: string, text: string, target: HTMLElement | string = 'body') {
         await Swal.fire({
             icon: 'error',
             title: title,
             text: text,
+            target: target
         });
     }
 
@@ -182,7 +184,9 @@ export class BaseComponent {
         inputLabel: string,
         placeholder: string,
         confirmButtonText: string = 'ยืนยัน',
-        cancelButtonText: string = 'ยกเลิก') {
+        cancelButtonText: string = 'ยกเลิก',
+        target: HTMLElement | string = 'body'
+    ) {
         return await Swal.fire({
             title: title,
             input: inputType,
@@ -191,7 +195,14 @@ export class BaseComponent {
             inputPlaceholder: placeholder,
             showCancelButton: true,
             confirmButtonText: confirmButtonText,
-            cancelButtonText: cancelButtonText
+            cancelButtonText: cancelButtonText,
+            target: target,
+            inputValidator: (value) => {
+                if (!value) {
+                    return validationMessage;
+                }
+                return null;
+            }
         });
     }
 

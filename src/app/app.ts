@@ -3,11 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router, RouterOutlet } from "@angular/router";
 import { Navbar } from './component/navbar/navber';
 import { AppStateService } from './core/AppStateService';
-import { UserClientData } from './types/UserClientData';
 import { AuthService } from './core/AuthService';
 import { filter } from 'rxjs/internal/operators/filter';
-import { jwtDecode } from "jwt-decode";
-import { KycStatus, UserRole, UserStatus } from './types/Enum';
 import { SocketService } from './API/SocketService';
 import { ChatService } from '../app/core/ChatService';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -20,7 +17,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 })
 
 export class App {
-  token?: string;
 
   constructor(public authService: AuthService,
     public stateService: AppStateService,
@@ -38,15 +34,14 @@ export class App {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(async (event: any) => {
       const url = event.urlAfterRedirects;
 
-      if (url.startsWith('/verify-email') || url.startsWith('/change-password') || url.startsWith('/delete-account')) {
-        return;
-      }
+      const excludedUrls = ['/login', '/verify-email', '/change-password'];
+      if (excludedUrls.some(path => url.startsWith(path))) return;
 
-      await this.loadUserFromToken();
-      if (this.stateService.user()?.Role === "ADMIN") {
-        if (!url.startsWith('/admin')) {
-          this.router.navigate(['/admin/dashboard']);
-        }
+      const user = this.stateService.user();
+      if (!user) return;
+
+      if (user.Role === "ADMIN" && !url.startsWith('/admin')) {
+        this.router.navigate(['/admin/dashboard']);
         return;
       }
 
@@ -55,36 +50,6 @@ export class App {
       }
       this.SocketService.joinUser(this.stateService.userId() || '');
     });
-  }
-
-  async loadUserFromToken() {
-    this.token = localStorage.getItem('token') || undefined;
-
-    if (!this.token) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    try {
-      const decodeJwt = jwtDecode<JwtPayload>(this.token);
-
-      const userClient: UserClientData = {
-        Email: decodeJwt.email,
-        FullName: decodeJwt.fullName,
-        Role: decodeJwt.role,
-        Phone: decodeJwt.phone,
-        KycStatus: decodeJwt.kycStatus,
-        UserStatus: decodeJwt.userStatus,
-        IsEnabled2FA: decodeJwt.isEnabled2FA
-      } as UserClientData;
-
-      this.authService.SetUserClient(this.token, userClient, decodeJwt.userId);
-
-    } catch (err) {
-      console.error('Invalid token', err);
-      localStorage.removeItem('token');
-      this.router.navigate(['/login']);
-    }
   }
 
   ngAfterViewInit() {
@@ -112,15 +77,4 @@ export class App {
       content.style.paddingTop = `${nav.offsetHeight}px`;
     }
   }
-}
-
-interface JwtPayload {
-  userId: string;
-  email: string;
-  fullName: string;
-  role: UserRole;
-  phone: string;
-  kycStatus: KycStatus;
-  userStatus: UserStatus;
-  isEnabled2FA: boolean;
 }

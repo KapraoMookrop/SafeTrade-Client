@@ -1,0 +1,101 @@
+<div class="dialog" style="height: 70vh;">
+    <div class="dialog-header d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-3">
+            <div class="text-primary text-3xl">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="d-flex flex-column align-items-start">
+                <span class="text-2xl font-medium">ข้อมูลผู้ขาย</span>
+                <span class="text-xs text-muted">UserId: {{ SellerData.UserId }}</span>
+            </div>
+        </div>
+        <button class="btn-close" (click)="close()"></button>
+    </div>
+    <div class="dialog-body">
+        <div class="d-grid gap-3" style="grid-template-columns: repeat(2, 1fr);">
+
+            <div class="rounded-3 d-flex justify-content-between align-items-center bg-secondary p-3"
+                style="grid-column: span 2;">
+                <div class="d-flex gap-2 text-xl">
+                    <i class="fa-solid fa-shield-halved text-primary"></i>
+                    <span>สถานะปัจจุบัน</span>
+                </div>
+                <div class="d-flex">
+                    @if(SellerData.SellerStatus == "PENDING") {
+                    <span class="text-box bg-warning text-dark">รอตรวจสอบ</span>
+                    } @else if(SellerData.SellerStatus == "APPROVED") {
+                    <span class="text-box bg-success">อนุมัติ</span>
+                    } @else if(SellerData.SellerStatus == "REJECTED") {
+                    <span class="text-box bg-danger">ปฏิเสธ</span>
+                    }
+                </div>
+            </div>
+
+            <div class="d-flex flex-column gap-2 bg-secondary rounded-3 p-3">
+                <div class="text-muted text-xs d-flex align-items-center gap-1">
+                    <i class="fa-solid fa-user"></i>
+                    <span>ชื่อ-นามสกุล</span>
+                </div>
+                <div class="text-base">{{ SellerData.FullName }}</div>
+            </div>
+
+            <div class="d-flex flex-column gap-2 bg-secondary rounded-3 p-3">
+                <div class="text-muted text-xs d-flex align-items-center gap-1">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>อีเมล</span>
+                </div>
+                <div class="text-base text-break">{{ SellerData.Email }}</div>
+            </div>
+
+            <div class="d-flex flex-column gap-2 bg-secondary rounded-3 p-3">
+                <div class="text-muted text-xs d-flex align-items-center gap-1">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>เบอร์โทรศัพท์</span>
+                </div>
+                <div class="text-base">{{ SellerData.Phone | mask:'000-000-0000' }}</div>
+            </div>
+
+            <div class="d-flex flex-column gap-2 bg-secondary rounded-3 p-3">
+                <div class="text-muted text-xs d-flex align-items-center gap-1">
+                    <i class="fa-solid fa-money-bill"></i>
+                    <span>เลขบัญชีธนาคาร</span>
+                </div>
+                <div class="text-base">
+                    <span>{{ SellerData.BankNumber | mask:'000-0-00000-0' }}</span> <br />
+                    <span class="text-muted text-sm">({{ SellerData.BankName }})</span>
+                </div>
+            </div>
+
+            <div class="rounded-3 d-flex justify-content-between align-items-center" style="grid-column: span 2;">
+                <div class="d-flex gap-2 text-base align-items-center">
+                    <i class="fa-regular fa-file-image text-primary"></i>
+                    <span>เอกสารยืนยันตัวตน</span>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column gap-2 bg-secondary rounded-3 p-3">
+                <img [src]="SellerData.IdCardImage" class="preview-img" alt="ID Card Image">
+            </div>
+
+            <div class="d-flex flex-column gap-2 bg-secondary rounded-3 p-3">
+                <img [src]="SellerData.SelfieImage" class="preview-img" alt="Selfie with ID Card Image">
+            </div>
+
+        </div>
+    </div>
+    <div class="dialog-footer w-100 d-flex justify-content-between align-items-center">
+        @if(SellerData.SellerStatus == "PENDING") {
+        <div class="d-flex gap-2">
+            <button class="btn btn-success" (click)="Approve()">
+                <i class="fa-solid fa-check"></i>
+                อนุมัติ
+            </button>
+            <button class="btn btn-danger" (click)="Reject()">
+                <i class="fa-solid fa-xmark"></i>
+                ปฏิเสธ
+            </button>
+        </div>
+        }
+        <button class="swal2-cancel" (click)="close()">ปิด</button>
+    </div>
+</div>

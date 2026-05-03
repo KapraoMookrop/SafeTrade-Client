@@ -9,6 +9,7 @@ import { ChangePassword } from './pages/auth/change-password/change-password';
 import { DeleteAccount } from './pages/auth/delete-account/delete-account';
 import { ChatRoom } from './pages/chat-room/chat-room';
 import { ManageSellers } from './pages/admin/manage-sellers/manage-sellers';
+import { AdminGuard, AuthGuard } from './core/Auth';
 
 export const routes: Routes = [
     {
@@ -19,22 +20,26 @@ export const routes: Routes = [
     {
         title: 'SafeTrade - Home',
         path: 'home',
-        component: Home
+        component: Home,
+        canActivate: [AuthGuard]
     },
     {
         title: 'SafeTrade - Chat',
         path: 'chat',
-        component: Chat
+        component: Chat,
+        canActivate: [AuthGuard]
     },
     {
         title: 'SafeTrade - Tracking',
         path: 'tracking',
-        component: Tracking
+        component: Tracking,
+        canActivate: [AuthGuard]
     },
     {
         title: 'SafeTrade - Profile',
         path: 'profile',
-        component: Profile
+        component: Profile,
+        canActivate: [AuthGuard]
     },
     {
         title: 'SafeTrade - Login',
@@ -59,22 +64,26 @@ export const routes: Routes = [
     {
         title: 'SafeTrade - Chat Room',
         path: 'chat-room/:chatRoomId',
-        component: ChatRoom
+        component: ChatRoom,
+        canActivate: [AuthGuard]
     },
     {
         title: 'SafeTrade - Admin Dashboard',
         path: 'admin/dashboard',
-        component: Home
+        component: Home,
+        canActivate: [AuthGuard, AdminGuard]
     },
     {
         title: 'SafeTrade - Admin Sellers',
         path: 'admin/sellers',
-        component: ManageSellers
+        component: ManageSellers,
+        canActivate: [AuthGuard, AdminGuard]
     },
     {
         title: 'SafeTrade - Admin Deals',
         path: 'admin/deals',
-        component: Home
+        component: Home,
+        canActivate: [AuthGuard, AdminGuard]
     },
     {
         title: 'SafeTrade - Home',
