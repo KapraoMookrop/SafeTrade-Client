@@ -40,7 +40,6 @@
                     <th>อีเมล</th>
                     <th class="text-center">ข้อมูลผู้ขาย</th>
                     <th class="text-center">สถานะ</th>
-                    <th class="text-center">การกระทำ</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,13 +67,6 @@
                         }@else if(item.SellerStatus == "REJECTED") {
                         <span class="text-box text-white bg-danger">ปฏิเสธ</span>
                         }
-                    </td>
-
-                    <td class="text-center">
-                        <div class="d-flex justify-content-center gap-2">
-                            <button class="btn btn-sm btn-outline-danger">ปฏิเสธ</button>
-                            <button class="btn btn-sm btn-outline-primary">อนุมัติ</button>
-                        </div>
                     </td>
                 </tr>
                 }

@@ -81,6 +81,13 @@
                 <img [src]="SellerData.SelfieImage" class="preview-img" alt="Selfie with ID Card Image">
             </div>
 
+            <div class="rounded-3 d-flex justify-content-between align-items-center" style="grid-column: span 2;">
+                <div class="d-flex gap-2 text-base align-items-center">
+                    <i class="fa-regular fa-file-image text-primary"></i>
+                    <span>ผู้ตรวจสอบ : {{ SellerData.ReviewedBy }}</span>
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="dialog-footer w-100 d-flex justify-content-between align-items-center">
