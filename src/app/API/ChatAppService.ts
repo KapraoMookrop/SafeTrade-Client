@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpContext } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { SendMessagesRequest } from '../types/SendMessagesRequest';
-import { SKIP_LOADING } from '../core/LoadingContext';
 import { MessageRequestData } from '../types/MessageRequestData';
 import { MessageDataList } from '../types/MessageDataList';
 import { ChatRoomData } from '../types/ChatRoomData';
@@ -19,10 +18,7 @@ export class ChatAppService {
     async SendMessage(request: SendMessagesRequest): Promise<void> {
         const observable = this.http.post<void>(
             `${this.baseUrl}/chat/SendMessages`,
-            request,
-            {
-                context: new HttpContext().set(SKIP_LOADING, true)
-            }
+            request
         );
         const response = await lastValueFrom(observable);
         return response;
@@ -40,10 +36,7 @@ export class ChatAppService {
     async MarkAsRead(request: MessageRequestData): Promise<void> {
         const observable = this.http.post<void>(
             `${this.baseUrl}/chat/MarkAsRead`,
-            request,
-            {
-                context: new HttpContext().set(SKIP_LOADING, true)
-            }
+            request
         );
         const response = await lastValueFrom(observable);
         return response;

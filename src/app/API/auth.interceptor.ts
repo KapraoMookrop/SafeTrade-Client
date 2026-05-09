@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   HttpInterceptor,
   HttpRequest,
@@ -14,28 +14,38 @@ import { SKIP_LOADING } from '../core/LoadingContext';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+  private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
 
-  constructor(private readonly router: Router, private readonly LoadingService: LoadingService) { }
+  private readonly skipLoadingUrls = [
+    '/api/chat/GetMessages', 
+    '/api/chat/SendMessages',
+    '/api/chat/MarkAsRead',
+    '/api/core/GetNotifications'
+  ];
+
+  private readonly skipLoadingRoutes = [
+    '/chat-room'
+  ];
+
+  private readonly skipAuthUrls = [
+    '/api/users/Login',
+    '/api/users/SignUp'
+  ];
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const isSkipLoading = req.context.get(SKIP_LOADING) || 
+                         this.skipLoadingUrls.some(url => req.url.includes(url)) ||
+                         this.skipLoadingRoutes.some(route => this.router.url.includes(route));
 
-    const skipLoading = req.context.get(SKIP_LOADING);
-
-    if (!skipLoading) {
-      this.LoadingService.show();
+    if (!isSkipLoading) {
+      this.loadingService.show();
     }
 
     const token = localStorage.getItem('token');
-
-    const skipUrls = [
-      '/api/users/Login',
-      '/api/users/SignUp'
-    ];
-
-    const shouldSkipAuth = skipUrls.some(url => req.url.includes(url));
+    const shouldSkipAuth = this.skipAuthUrls.some(url => req.url.includes(url));
 
     let authReq = req;
-
     if (token && !shouldSkipAuth) {
       authReq = req.clone({
         setHeaders: {
@@ -46,17 +56,16 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       finalize(() => {
-        if (!skipLoading) {
-          this.LoadingService.hide();
+        if (!isSkipLoading) {
+          this.loadingService.hide();
         }
       }),
-
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
           localStorage.removeItem('token');
           this.router.navigate(['/login']);
+          this.loadingService.reset(); 
         }
-
         return throwError(() => error);
       })
     );

@@ -1,18 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpContext } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { SendMessagesRequest } from '../types/SendMessagesRequest';
-import { SKIP_LOADING } from '../core/LoadingContext';
-import { MessageRequestData } from '../types/MessageRequestData';
-import { MessageDataList } from '../types/MessageDataList';
-import { ChatRoomData } from '../types/ChatRoomData';
 import { CreateChatRoomRequest } from '../types/CreateChatRoomRequest';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DealAppService {
+// ...
 
     private readonly baseUrl = environment.apiUrl;
     constructor(private readonly http: HttpClient) { }
