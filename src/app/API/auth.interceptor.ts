@@ -17,13 +17,6 @@ export class AuthInterceptor implements HttpInterceptor {
   private readonly router = inject(Router);
   private readonly loadingService = inject(LoadingService);
 
-  private readonly skipLoadingUrls = [
-    '/api/chat/GetMessages', 
-    '/api/chat/SendMessages',
-    '/api/chat/MarkAsRead',
-    '/api/core/GetNotifications'
-  ];
-
   private readonly skipLoadingRoutes = [
     '/chat-room'
   ];
@@ -35,7 +28,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const isSkipLoading = req.context.get(SKIP_LOADING) || 
-                         this.skipLoadingUrls.some(url => req.url.includes(url)) ||
                          this.skipLoadingRoutes.some(route => this.router.url.includes(route));
 
     if (!isSkipLoading) {

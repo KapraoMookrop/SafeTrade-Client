@@ -9,31 +9,8 @@ import { AppStateService } from './AppStateService';
               <div class="loader"></div>
             </div>`,
   standalone: true,
-  styles: [`
-    .modal-loading {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-      width: 100%;
-    }
-    .loader {
-      width: 48px;
-      height: 48px;
-      border: 5px solid #FFF;
-      border-bottom-color: #3b82f6;
-      border-radius: 50%;
-      display: inline-block;
-      box-sizing: border-box;
-      animation: rotation 1s linear infinite;
-    }
-    @keyframes rotation {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  `]
 })
-export class GlobalLoaderComponent { }
+export class GlobalLoaderComponent {}
 
 @Injectable({ providedIn: 'root' })
 export class LoadingService {
@@ -54,7 +31,7 @@ export class LoadingService {
     if (this.loadingCount > 0) {
       this.loadingCount--;
     }
-    
+
     if (this.loadingCount === 0) {
       this.appState.isLoading.set(false);
       this.destroyOverlay();
@@ -72,11 +49,8 @@ export class LoadingService {
       this.overlayRef = this.overlay.create({
         hasBackdrop: true,
         backdropClass: 'cdk-overlay-dark-backdrop',
-        positionStrategy: this.overlay.position()
-          .global()
-          .centerHorizontally()
-          .centerVertically(),
-        scrollStrategy: this.overlay.scrollStrategies.block()
+        positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically(),
+        scrollStrategy: this.overlay.scrollStrategies.block(),
       });
 
       this.overlayRef.attach(new ComponentPortal(GlobalLoaderComponent));

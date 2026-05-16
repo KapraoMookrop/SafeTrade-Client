@@ -1,11 +1,10 @@
-import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BaseComponent } from '../../core/BaseComponent';
 import { SocketService } from '../../API/SocketService';
 import { ChatAppService } from '../../API/ChatAppService';
 import { DealAppService } from '../../API/DealAppService';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChatRoomData } from '../../types/ChatRoomData';
 import { CommonModule } from '@angular/common';
 import { CreateChatDialog } from '../../component/dialog/create-chat-dialog/create-chat-dialog';
 import { CreateChatRoomRequest } from '../../types/CreateChatRoomRequest';
@@ -23,7 +22,6 @@ export class Chat extends BaseComponent implements OnInit {
     super();
   }
 
-  ChatRooms: ChatRoomData[] = [];
   ngOnInit() {
     this.LoadChatRooms();
   }
@@ -31,7 +29,6 @@ export class Chat extends BaseComponent implements OnInit {
   async LoadChatRooms() {
     try {
       const result = await this.ChatAppService.GetAllChatRooms();
-      this.ChatRooms = result;
       this.ChatService.setLastMessages(result);
     } catch (error: HttpErrorResponse | any) {
       this.SwalError('เกิดข้อผิดพลาด', error.error?.message || error.message || 'เกิดข้อผิดพลาดในการโหลดห้องแชท');
