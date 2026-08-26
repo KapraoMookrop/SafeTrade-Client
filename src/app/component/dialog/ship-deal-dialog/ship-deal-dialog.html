@@ -1,0 +1,52 @@
+<div class="dialog">
+    <div class="dialog-header">
+        <div class="text-3xl font-medium text-center text-dark">บันทึกการส่งพัสดุ</div>
+    </div>
+    <div class="dialog-body text-dark">
+        <div class="d-flex flex-column gap-3 mt-3">
+            <!-- เลือกบริษัทขนส่ง -->
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fa-solid fa-truck-fast"></i>
+                </span>
+                <div class="form-floating">
+                    <select class="form-select" id="carrierSelect" [(ngModel)]="carrier">
+                        @for (c of carriers; track c) {
+                        <option [value]="c">{{ c }}</option>
+                        }
+                    </select>
+                    <label for="carrierSelect">บริษัทขนส่ง</label>
+                </div>
+            </div>
+
+            <!-- กรอกเลขพัสดุ -->
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fa-solid fa-barcode"></i>
+                </span>
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="trackingNumber" placeholder="เลขพัสดุ (Tracking Number)" [(ngModel)]="trackingNumber" />
+                    <label for="trackingNumber">เลขพัสดุ (Tracking Number)</label>
+                </div>
+            </div>
+
+            <!-- อัปโหลดรูปภาพพัสดุ -->
+            <div class="d-flex flex-column align-items-center gap-2 border rounded-3 p-3 bg-secondary">
+                <div class="text-muted text-sm mb-1"><i class="fa-regular fa-image me-1"></i> ถ่ายรูปพัสดุพร้อมที่อยู่ผู้รับ</div>
+                @if (imagePreview) {
+                <div class="mb-2 border rounded p-1 bg-white position-relative" style="max-width: 200px;">
+                    <img [src]="imagePreview" class="img-fluid rounded" alt="Package Preview" style="max-height: 200px; object-fit: contain;">
+                </div>
+                }
+                <button class="btn btn-sm btn-outline-success d-flex align-items-center gap-2" (click)="fileInput.click()">
+                    <i class="fa-solid fa-camera"></i> เลือกรูปถ่ายพัสดุ
+                </button>
+                <input #fileInput type="file" class="d-none" accept="image/*" (change)="onFileSelected($event)" />
+            </div>
+        </div>
+    </div>
+    <div class="dialog-footer">
+        <button class="swal2-cancel" (click)="close()">ยกเลิก</button>
+        <button class="swal2-confirm" (click)="submit()">บันทึกจัดส่งพัสดุ</button>
+    </div>
+</div>

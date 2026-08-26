@@ -60,4 +60,18 @@ export class DealAppService {
         );
         return await lastValueFrom(observable);
     }
+
+    async ShipDeal(dealId: string, carrier: string, trackingNumber: string, packageFile: File): Promise<{ success: boolean; shipmentId: string }> {
+        const formData = new FormData();
+        formData.append('dealId', dealId);
+        formData.append('carrier', carrier);
+        formData.append('trackingNumber', trackingNumber);
+        formData.append('PackageImage', packageFile);
+
+        const observable = this.http.post<{ success: boolean; shipmentId: string }>(
+            `${this.baseUrl}/deal/ShipDeal`,
+            formData
+        );
+        return await lastValueFrom(observable);
+    }
 }

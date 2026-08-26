@@ -6,12 +6,13 @@ import { DealAppService } from '../../API/DealAppService';
 import { MessageRequestData } from '../../types/MessageRequestData';
 import { MessageData } from '../../types/MessageData';
 import { SendMessagesRequest } from '../../types/SendMessagesRequest';
-import { MessageContentType, UserRole } from '../../types/Enum';
+import { MessageContentType, UserRole, DealStatus } from '../../types/Enum';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ReadMessagesRequest } from '../../types/ReadMessagesRequest';
 import { CommonModule } from '@angular/common';
 import { CreateDealDialog } from '../../component/dialog/create-deal-dialog/create-deal-dialog';
+import { ShipDealDialog } from '../../component/dialog/ship-deal-dialog/ship-deal-dialog';
 import { CreateDealRequest } from '../../types/CreateDealRequest';
 import { ActiveDealData } from '../../types/MessageDataList';
 
@@ -30,6 +31,7 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
   OtherUserId = '';
   newMessage = '';
   UserRole = UserRole;
+  DealStatus = DealStatus;
   ActiveDeal: ActiveDealData | null = null;
 
   constructor(private SocketService: SocketService,
@@ -58,12 +60,10 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
             return;
           }
 
-          this.Messages.push(msg);
+          // เมื่อมีข้อความใหม่เข้ามาระหว่างอยู่ในห้องแชท ให้ทำเครื่องหมายว่าอ่านแล้ว และดึงข้อมูลแชทใหม่ทั้งหมด
+          // เพื่อให้สถานะดีล สลิป และข้อมูลการจัดส่งใน Section แถบซื้อขายอัปเดตเรียลไทม์
           this.MarkAsRead();
-          this.RefreshDetectChanges();
-          setTimeout(() => {
-            this.scrollToBottom();
-          });
+          this.LoadMessages();
         });
 
         this.MarkAsRead();
@@ -207,5 +207,20 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
       this.HideLoading();
       this.SwalError('เกิดข้อผิดพลาด', err.error?.message || err.message || 'ไม่สามารถอัปโหลดหลักฐานได้');
     }
+  }
+
+  OpenShipDealDialog() {
+    if (!this.ActiveDeal) return;
+    const dialogRef = this.DialogService.open(ShipDealDialog, {
+      data: {
+        dealId: this.ActiveDeal.Id
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean | undefined) => {
+      if (result) {
+        this.LoadMessages();
+      }
+    });
   }
 }
