@@ -10,7 +10,6 @@ import { SellerSearchCriteria } from '../types/SellerSearchCriteria';
     providedIn: 'root'
 })
 export class SellerAppService {
-// ...
 
     private readonly baseUrl = environment.apiUrl;
     constructor(private readonly http: HttpClient) { }

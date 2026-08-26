@@ -8,7 +8,6 @@ import { CreateChatRoomRequest } from '../types/CreateChatRoomRequest';
     providedIn: 'root'
 })
 export class DealAppService {
-// ...
 
     private readonly baseUrl = environment.apiUrl;
     constructor(private readonly http: HttpClient) { }
