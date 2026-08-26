@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { SendMessagesRequest } from '../types/SendMessagesRequest';
 import { MessageRequestData } from '../types/MessageRequestData';
 import { MessageDataList } from '../types/MessageDataList';
 import { ChatRoomData } from '../types/ChatRoomData';
+import { SKIP_LOADING } from '../core/LoadingContext';
 
 @Injectable({
     providedIn: 'root'
@@ -16,37 +17,32 @@ export class ChatAppService {
     constructor(private readonly http: HttpClient) { }
 
     async SendMessage(request: SendMessagesRequest): Promise<void> {
-        const observable = this.http.post<void>(
+        return await lastValueFrom(this.http.post<void>(
             `${this.baseUrl}/chat/SendMessages`,
-            request
-        );
-        const response = await lastValueFrom(observable);
-        return response;
+            request,
+            { context: new HttpContext().set(SKIP_LOADING, true) }
+        ));
     }
 
     async GetMessages(request: MessageRequestData): Promise<MessageDataList> {
-        const observable = this.http.post<MessageDataList>(
+        return await lastValueFrom(this.http.post<MessageDataList>(
             `${this.baseUrl}/chat/GetMessages`,
-            request
-        );
-        const response = await lastValueFrom(observable);
-        return response;
+            request,
+            { context: new HttpContext().set(SKIP_LOADING, true) }
+        ));
     }
 
     async MarkAsRead(request: MessageRequestData): Promise<void> {
-        const observable = this.http.post<void>(
+        return await lastValueFrom(this.http.post<void>(
             `${this.baseUrl}/chat/MarkAsRead`,
-            request
-        );
-        const response = await lastValueFrom(observable);
-        return response;
+            request,
+            { context: new HttpContext().set(SKIP_LOADING, true) }
+        ));
     }
 
     async GetAllChatRooms(): Promise<ChatRoomData[]> {
-        const observable = this.http.get<ChatRoomData[]>(
-            `${this.baseUrl}/chat/GetAllChatRooms`,
-        );
-        const response = await lastValueFrom(observable);
-        return response;
+        return await lastValueFrom(this.http.get<ChatRoomData[]>(
+            `${this.baseUrl}/chat/GetAllChatRooms`
+        ));
     }
 }

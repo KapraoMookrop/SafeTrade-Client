@@ -10,22 +10,22 @@ import { AppStateService } from './AppStateService';
             </div>`,
   standalone: true
 })
-export class GlobalLoaderComponent { }
+export class GlobalLoaderComponent {}
 
 @Injectable({ providedIn: 'root' })
 export class LoadingService {
   private overlayRef: OverlayRef | null = null;
-  private loadingCount = 0; // เพิ่มตัวนับจำนวน request
+  private loadingCount = 0; // ???????????????? request
 
   constructor(
     private overlay: Overlay,
-    private appState: AppStateService // Inject AppStateService เพื่ออัพเดท signal
+    private appState: AppStateService // Inject AppStateService ??????????? signal
   ) { }
 
   show() {
     this.loadingCount++;
-    // ใช้ Promise.resolve() เพื่อผลักการอัพเดทไปที่ Microtask queue 
-    // ช่วยแก้ปัญหา ExpressionChangedAfterItHasBeenCheckedError (NG0100)
+    // ??? Promise.resolve() ??????????????????????? Microtask queue 
+    // ???????????? ExpressionChangedAfterItHasBeenCheckedError (NG0100)
     Promise.resolve().then(() => {
       this.appState.isLoading.set(true);
 

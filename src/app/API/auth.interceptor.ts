@@ -19,7 +19,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    // รายการ URL ที่ไม่ต้องแสดง Global Loading
+    // ?????? URL ?????????????? Global Loading
     const skipLoadingUrls = [
       '/chat/SendMessages',
       '/chat/MarkAsRead',
@@ -29,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
       '/users/CheckAlreadyExistsEmail'
     ];
 
-    // ตรวจสอบว่า URL ปัจจุบันอยู่ในรายการที่ต้องข้าม loading หรือไม่ หรือมีการตั้งค่าผ่าน context
+    // ?????????? URL ??????????????????????????????? loading ??????? ???????????????????? context
     const isSkipLoadingUrl = skipLoadingUrls.some(url => req.url.includes(url));
     const skipLoading = req.context.get(SKIP_LOADING) || isSkipLoadingUrl;
 
@@ -39,7 +39,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     const token = localStorage.getItem('token');
     
-    // รายการ URL ที่ไม่ต้องใส่ Auth Header (เช่น Login, SignUp)
+    // ?????? URL ????????????? Auth Header (???? Login, SignUp)
     const skipAuthUrls = [
       '/api/users/Login',
       '/api/users/SignUp'

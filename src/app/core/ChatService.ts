@@ -9,15 +9,19 @@ export class ChatService {
   constructor(private readonly state: AppStateService) { }
 
   updateLastMessages(rq: ChatRoomData) {
-    const currentRooms = this.state.allChatRooms().find(r => r.ChatRoomId == rq.ChatRoomId);
-    if (currentRooms) {
-      currentRooms.LastMessage = rq.LastMessage;
-      currentRooms.LastMessageAt = rq.LastMessageAt;
-      currentRooms.CountUnread = currentRooms.CountUnread + 1;
-      currentRooms.UserName = rq.UserName;
-      currentRooms.UserAvatarUrl = rq.UserAvatarUrl;
-      this.state.allChatRooms.set([...this.state.allChatRooms()]);
-    }
+    this.state.allChatRooms.update(rooms => rooms.map(room => {
+      if (room.ChatRoomId === rq.ChatRoomId) {
+        return {
+          ...room,
+          LastMessage: rq.LastMessage,
+          LastMessageAt: rq.LastMessageAt,
+          CountUnread: (room.CountUnread ?? 0) + 1,
+          UserName: rq.UserName,
+          UserAvatarUrl: rq.UserAvatarUrl
+        };
+      }
+      return room;
+    }));
   }
 
   setLastMessages(chatRooms: ChatRoomData[]) {
