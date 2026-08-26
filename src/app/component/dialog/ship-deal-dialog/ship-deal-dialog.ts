@@ -49,15 +49,15 @@ export class ShipDealDialog extends BaseComponent {
 
     async submit() {
         if (!this.carrier) {
-            await this.Swaltoast('กรุณาเลือกบริษัทขนส่ง', 'error');
+            await this.Swaltoast('กรุณาเลือกบริษัทขนส่ง', 'error', 2000, false, '.cdk-global-overlay-wrapper');
             return;
         }
         if (!this.trackingNumber.trim()) {
-            await this.Swaltoast('กรุณากรอกเลขพัสดุ', 'error');
+            await this.Swaltoast('กรุณากรอกเลขพัสดุ', 'error', 2000, false, '.cdk-global-overlay-wrapper');
             return;
         }
         if (!this.selectedFile) {
-            await this.Swaltoast('กรุณาอัปโหลดรูปถ่ายพัสดุ', 'error');
+            await this.Swaltoast('กรุณาอัปโหลดรูปถ่ายพัสดุ', 'error', 2000, false, '.cdk-global-overlay-wrapper');
             return;
         }
 
@@ -68,17 +68,17 @@ export class ShipDealDialog extends BaseComponent {
             const isTrackingValid = await this.validateTrackingNumber(this.carrier, this.trackingNumber);
             if (!isTrackingValid) {
                 this.HideLoading();
-                await this.SwalError('เลขพัสดุไม่ถูกต้อง', 'ไม่พบข้อมูลของเลขพัสดุนี้ในระบบของขนส่ง');
+                await this.SwalError('เลขพัสดุไม่ถูกต้อง', 'ไม่พบข้อมูลของเลขพัสดุนี้ในระบบของขนส่ง', '.cdk-global-overlay-wrapper');
                 return;
             }
 
             await this.DealAppService.ShipDeal(this.dealId, this.carrier, this.trackingNumber, this.selectedFile);
             this.HideLoading();
-            await this.SwalSuccess('บันทึกข้อมูลสำเร็จ', 'ข้อมูลการจัดส่งพัสดุถูกบันทึกเข้าระบบเรียบร้อยแล้ว');
+            await this.SwalSuccess('บันทึกข้อมูลสำเร็จ', 'ข้อมูลการจัดส่งพัสดุถูกบันทึกเข้าระบบเรียบร้อยแล้ว', '.cdk-global-overlay-wrapper');
             this.dialogRef.close(true);
         } catch (err: any) {
             this.HideLoading();
-            await this.SwalError('เกิดข้อผิดพลาด', err.error?.message || err.message);
+            await this.SwalError('เกิดข้อผิดพลาด', err.error?.message || err.message, '.cdk-global-overlay-wrapper');
         }
     }
 

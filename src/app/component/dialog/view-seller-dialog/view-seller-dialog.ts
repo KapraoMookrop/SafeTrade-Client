@@ -34,7 +34,7 @@ export class ViewSellerDialog extends BaseComponent {
         const targetElement = document.querySelector('.mat-mdc-dialog-container') as HTMLElement;
         try {
             await this.SellerAppService.ApproveSeller(this.SellerData.UserId);
-            this.SwalSuccess("สำเร็จ", "ยืนยันผู้ขายเรียบร้อยแล้ว");
+            this.SwalSuccess("สำเร็จ", "ยืนยันผู้ขายเรียบร้อยแล้ว", targetElement);
             this.dialogRef.close(true);
         } catch (error: HttpErrorResponse | any) {
             this.SwalError("เกิดข้อผิดพลาด", error.message || "ไม่สามารถยืนยันผู้ขายได้ในขณะนี้", targetElement);
@@ -55,7 +55,7 @@ export class ViewSellerDialog extends BaseComponent {
         );
         try {
             await this.SellerAppService.RejectSeller(this.SellerData.UserId, comment);
-            this.SwalSuccess("สำเร็จ", "ปฏิเสธผู้ขายเรียบร้อยแล้ว");
+            this.SwalSuccess("สำเร็จ", "ปฏิเสธผู้ขายเรียบร้อยแล้ว", targetElement);
             this.dialogRef.close(true);
         } catch (error: HttpErrorResponse | any) {
             this.SwalError("เกิดข้อผิดพลาด", error.message || "ไม่สามารถปฏิเสธผู้ขายได้ในขณะนี้", targetElement);

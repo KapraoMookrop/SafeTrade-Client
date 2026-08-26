@@ -30,11 +30,11 @@ export class CreateDealDialog extends BaseComponent {
 
     submit() {
         if (!this.title.trim()) {
-            this.SwalError('ข้อผิดพลาด', 'กรุณากรอกหัวข้อดีล/ชื่อสินค้า');
+            this.SwalError('ข้อผิดพลาด', 'กรุณากรอกหัวข้อดีล/ชื่อสินค้า', '.cdk-global-overlay-wrapper');
             return;
         }
         if (this.amount === null || this.amount <= 0) {
-            this.SwalError('ข้อผิดพลาด', 'กรุณากรอกจำนวนเงินให้ถูกต้อง');
+            this.SwalError('ข้อผิดพลาด', 'กรุณากรอกจำนวนเงินให้ถูกต้อง', '.cdk-global-overlay-wrapper');
             return;
         }
 

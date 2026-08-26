@@ -52,7 +52,7 @@ export class ApplySellerDialog extends BaseComponent {
             const result = await this.CoreAppService.FindBanks(term);
             this.Banks = result;
         } catch (error) {
-            this.SwalError("เกิดข้อผิดพลาด", "ไม่สามารถค้นหาธนาคารได้ในขณะนี้");
+            this.SwalError("เกิดข้อผิดพลาด", "ไม่สามารถค้นหาธนาคารได้ในขณะนี้", ".cdk-global-overlay-wrapper");
         }
 
         this.RefreshDetectChanges();

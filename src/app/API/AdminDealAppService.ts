@@ -40,4 +40,13 @@ export class AdminDealAppService {
         const response = await lastValueFrom(observable);
         return response;
     }
+
+    async ReleaseEscrow(dealId: string): Promise<{ message: string }> {
+        const observable = this.http.post<{ message: string }>(
+            `${this.baseUrl}/admin/Deals/ReleaseEscrow`,
+            { dealId }
+        );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
 }

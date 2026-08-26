@@ -223,4 +223,38 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  async ConfirmDelivery() {
+    if (!this.ActiveDeal) return;
+
+    const confirm = await this.SwalConfirmAlert(
+      'ยืนยันการรับสินค้า?',
+      'คุณได้รับสินค้าถูกต้องตามข้อตกลงและไม่มีข้อโต้แย้งใดๆ ใช่หรือไม่?'
+    );
+
+    if (confirm.isConfirmed) {
+      try {
+        this.ShowLoading();
+        await this.DealAppService.ConfirmDelivery(this.ActiveDeal.Id);
+        this.HideLoading();
+        this.SwalSuccess('สำเร็จ', 'ยืนยันการรับสินค้าเรียบร้อยแล้ว');
+        this.LoadMessages();
+      } catch (err: any) {
+        this.HideLoading();
+        this.SwalError('เกิดข้อผิดพลาด', err.error?.message || err.message || 'ไม่สามารถยืนยันการรับสินค้าได้');
+      }
+    }
+  }
+
+  get DealInsertionIndex(): number {
+    if (!this.ActiveDeal || !this.ActiveDeal.CreatedAt) return -1;
+    const dealTime = new Date(this.ActiveDeal.CreatedAt).getTime();
+    for (let i = 0; i < this.Messages.length; i++) {
+      const msgTime = new Date(this.Messages[i].CreatedAt).getTime();
+      if (msgTime >= dealTime) {
+        return i;
+      }
+    }
+    return this.Messages.length;
+  }
 }

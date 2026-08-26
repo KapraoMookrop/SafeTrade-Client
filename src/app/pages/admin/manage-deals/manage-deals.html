@@ -82,11 +82,17 @@
                             <span class="text-box bg-light text-muted font-medium">รอชำระเงิน</span>
                             }
                         }@else if(item.Status == "PAID") {
-                        <span class="text-box text-white bg-success font-medium">จ่ายแล้ว (Escrow)</span>
+                        <span class="text-box text-white bg-primary font-medium">ชำระเงินเข้า Escrow แล้ว</span>
+                        }@else if(item.Status == "SHIPPING") {
+                        <span class="text-box bg-info text-dark font-medium">กำลังจัดส่ง</span>
+                        }@else if(item.Status == "DELIVERED") {
+                        <span class="text-box text-white bg-success font-medium">รอโอนเงินให้ผู้ขาย</span>
                         }@else if(item.Status == "COMPLETED") {
-                        <span class="text-box text-white bg-secondary font-medium">สำเร็จ</span>
+                        <span class="text-box text-white bg-secondary font-medium">เสร็จสมบูรณ์</span>
                         }@else if(item.Status == "DISPUTED") {
-                        <span class="text-box text-white bg-danger font-medium">พิพาท</span>
+                        <span class="text-box text-white bg-danger font-medium">มีข้อพิพาท</span>
+                        }@else if(item.Status == "REFUNDED") {
+                        <span class="text-box text-white bg-dark font-medium">คืนเงินแล้ว</span>
                         }@else {
                         <span class="text-box bg-info text-dark font-medium">{{ item.Status }}</span>
                         }

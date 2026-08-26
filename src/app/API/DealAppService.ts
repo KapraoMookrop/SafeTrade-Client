@@ -74,4 +74,12 @@ export class DealAppService {
         );
         return await lastValueFrom(observable);
     }
+
+    async ConfirmDelivery(dealId: string): Promise<{ success: boolean }> {
+        const observable = this.http.post<{ success: boolean }>(
+            `${this.baseUrl}/deal/ConfirmDelivery`,
+            { dealId }
+        );
+        return await lastValueFrom(observable);
+    }
 }

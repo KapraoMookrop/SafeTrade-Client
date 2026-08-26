@@ -48,7 +48,7 @@ export class CreateChatDialog extends BaseComponent {
             const result = await this.CoreAppService.FindUsers(term);
             this.Users = result;
         } catch (error) {
-            this.SwalError("เกิดข้อผิดพลาด", "ไม่สามารถค้นหาผู้ใช้ได้ในขณะนี้");
+            this.SwalError("เกิดข้อผิดพลาด", "ไม่สามารถค้นหาผู้ใช้ได้ในขณะนี้", ".cdk-global-overlay-wrapper");
         }
 
         this.RefreshDetectChanges();

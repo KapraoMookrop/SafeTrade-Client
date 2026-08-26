@@ -38,7 +38,8 @@ export class BaseComponent {
         isShowConfirmButton: boolean = true,
         isShowCancelButton: boolean = false,
         confirmButtonText: string = 'OK',
-        cancelButtonText: string = 'Cancel') {
+        cancelButtonText: string = 'Cancel',
+        target: HTMLElement | string = 'body') {
         return await Swal.fire({
             icon: icon,
             title: title,
@@ -48,7 +49,7 @@ export class BaseComponent {
             showCancelButton: isShowCancelButton,
             confirmButtonText: confirmButtonText,
             cancelButtonText: cancelButtonText,
-            target: this.GetSwalTarget()
+            target: target
         });
     }
 
@@ -60,7 +61,8 @@ export class BaseComponent {
         isShowConfirmButton: boolean = true,
         isShowCancelButton: boolean = false,
         confirmButtonText: string = 'OK',
-        cancelButtonText: string = 'Cancel') {
+        cancelButtonText: string = 'Cancel',
+        target: HTMLElement | string = 'body') {
         return await Swal.fire({
             title: title,
             html: html,
@@ -71,7 +73,7 @@ export class BaseComponent {
             showCancelButton: isShowCancelButton,
             confirmButtonText: confirmButtonText,
             cancelButtonText: cancelButtonText,
-            target: this.GetSwalTarget()
+            target: target
         });
     }
 
@@ -80,7 +82,7 @@ export class BaseComponent {
             icon: 'success',
             title: title,
             text: text,
-            target: this.GetSwalTarget(target)
+            target: target
         });
     }
 
@@ -89,11 +91,11 @@ export class BaseComponent {
             icon: 'error',
             title: title,
             text: text,
-            target: this.GetSwalTarget(target)
+            target: target
         });
     }
 
-    protected async Swaltoast(text: string, icon: 'success' | 'error' | 'warning' | 'info' | 'question', timer: number = 2000, isPopup: boolean = false) {
+    protected async Swaltoast(text: string, icon: 'success' | 'error' | 'warning' | 'info' | 'question', timer: number = 2000, isPopup: boolean = false, target: HTMLElement | string = 'body') {
         if (isPopup) {
             const overlay = document.querySelector('.cdk-overlay-container');
             await Swal.fire({
@@ -103,7 +105,7 @@ export class BaseComponent {
                 text: text,
                 showConfirmButton: false,
                 timer: timer,
-                target: this.GetSwalTarget(overlay as HTMLElement || 'body')
+                target: overlay as HTMLElement || target
             });
         } else {
             await Swal.fire({
@@ -113,14 +115,14 @@ export class BaseComponent {
                 text: text,
                 showConfirmButton: false,
                 timer: timer,
-                target: this.GetSwalTarget()
+                target: target
             });
         }
     }
 
-    protected async Swal2FAAlert() {
+    protected async Swal2FAAlert(target: HTMLElement | string = 'body') {
         return await Swal.fire({
-            target: this.GetSwalTarget(),
+            target: target,
             title: 'ยืนยันตัวตน',
             html: `<div style="text-align:center">
                         <p style="margin-bottom:10px">กรอกรหัส 6 หลักจากแอป Authenticator</p>
@@ -200,7 +202,7 @@ export class BaseComponent {
             showCancelButton: true,
             confirmButtonText: confirmButtonText,
             cancelButtonText: cancelButtonText,
-            target: this.GetSwalTarget(target),
+            target: target,
             inputValidator: (value) => {
                 if (!value) {
                     return validationMessage;
@@ -222,18 +224,8 @@ export class BaseComponent {
             showCancelButton: true,
             confirmButtonText: confirmButtonText,
             cancelButtonText: cancelButtonText,
-            target: this.GetSwalTarget(target),
+            target: target,
         });
-    }
-
-    private GetSwalTarget(target: HTMLElement | string = 'body'): HTMLElement | string {
-        if (target === 'body') {
-            const overlay = document.querySelector('.cdk-global-overlay-wrapper');
-            if (overlay) {
-                return overlay as HTMLElement;
-            }
-        }
-        return target;
     }
 
     protected RefreshDetectChanges() {
