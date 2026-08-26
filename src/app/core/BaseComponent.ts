@@ -47,7 +47,8 @@ export class BaseComponent {
             showConfirmButton: isShowConfirmButton,
             showCancelButton: isShowCancelButton,
             confirmButtonText: confirmButtonText,
-            cancelButtonText: cancelButtonText
+            cancelButtonText: cancelButtonText,
+            target: this.GetSwalTarget()
         });
     }
 
@@ -69,7 +70,8 @@ export class BaseComponent {
             showConfirmButton: isShowConfirmButton,
             showCancelButton: isShowCancelButton,
             confirmButtonText: confirmButtonText,
-            cancelButtonText: cancelButtonText
+            cancelButtonText: cancelButtonText,
+            target: this.GetSwalTarget()
         });
     }
 
@@ -78,7 +80,7 @@ export class BaseComponent {
             icon: 'success',
             title: title,
             text: text,
-            target: target
+            target: this.GetSwalTarget(target)
         });
     }
 
@@ -87,7 +89,7 @@ export class BaseComponent {
             icon: 'error',
             title: title,
             text: text,
-            target: target
+            target: this.GetSwalTarget(target)
         });
     }
 
@@ -101,7 +103,7 @@ export class BaseComponent {
                 text: text,
                 showConfirmButton: false,
                 timer: timer,
-                target: overlay as HTMLElement || 'body'
+                target: this.GetSwalTarget(overlay as HTMLElement || 'body')
             });
         } else {
             await Swal.fire({
@@ -111,12 +113,14 @@ export class BaseComponent {
                 text: text,
                 showConfirmButton: false,
                 timer: timer,
+                target: this.GetSwalTarget()
             });
         }
     }
 
     protected async Swal2FAAlert() {
         return await Swal.fire({
+            target: this.GetSwalTarget(),
             title: 'ยืนยันตัวตน',
             html: `<div style="text-align:center">
                         <p style="margin-bottom:10px">กรอกรหัส 6 หลักจากแอป Authenticator</p>
@@ -196,7 +200,7 @@ export class BaseComponent {
             showCancelButton: true,
             confirmButtonText: confirmButtonText,
             cancelButtonText: cancelButtonText,
-            target: target,
+            target: this.GetSwalTarget(target),
             inputValidator: (value) => {
                 if (!value) {
                     return validationMessage;
@@ -209,15 +213,27 @@ export class BaseComponent {
     protected async SwalConfirmAlert(title: string,
         text: string,
         confirmButtonText: string = 'ยืนยัน',
-        cancelButtonText: string = 'ยกเลิก') {
+        cancelButtonText: string = 'ยกเลิก',
+        target: HTMLElement | string = 'body') {
         return await Swal.fire({
             title: title,
             text: text,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: confirmButtonText,
-            cancelButtonText: cancelButtonText
+            cancelButtonText: cancelButtonText,
+            target: this.GetSwalTarget(target),
         });
+    }
+
+    private GetSwalTarget(target: HTMLElement | string = 'body'): HTMLElement | string {
+        if (target === 'body') {
+            const overlay = document.querySelector('.cdk-global-overlay-wrapper');
+            if (overlay) {
+                return overlay as HTMLElement;
+            }
+        }
+        return target;
     }
 
     protected RefreshDetectChanges() {

@@ -40,7 +40,7 @@ export class App {
       const user = this.stateService.user();
       if (!user) return;
 
-      if (user.Role === "ADMIN" && !url.startsWith('/admin')) {
+      if (user.Role === "ADMIN" && !url.startsWith('/admin') && !url.startsWith('/profile')) {
         this.router.navigate(['/admin/dashboard']);
         return;
       }

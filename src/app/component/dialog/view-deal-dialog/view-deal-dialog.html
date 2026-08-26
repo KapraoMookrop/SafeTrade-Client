@@ -1,0 +1,96 @@
+<div class="dialog" style="height: 70vh;">
+    <div class="dialog-header d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-3 text-dark">
+            <div class="text-primary text-3xl">
+                <i class="fa-solid fa-handshake"></i>
+            </div>
+            <div class="d-flex flex-column align-items-start">
+                <span class="text-2xl font-medium">รายละเอียดดีล</span>
+                <span class="text-xs text-muted">DealId: {{ deal.Id }}</span>
+            </div>
+        </div>
+        <button class="btn-close" (click)="close()"></button>
+    </div>
+    <div class="dialog-body text-dark">
+        <div class="d-grid gap-3" style="grid-template-columns: repeat(2, 1fr);">
+
+            <div class="rounded-3 d-flex justify-content-between align-items-center bg-secondary p-3"
+                style="grid-column: span 2;">
+                <div class="d-flex gap-2 text-xl">
+                    <i class="fa-solid fa-shield-halved text-primary"></i>
+                    <span>สถานะดีลปัจจุบัน</span>
+                </div>
+                <div class="d-flex">
+                    <span class="text-box bg-warning text-dark font-medium">{{ deal.Status }}</span>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column gap-2 bg-secondary rounded-3 p-3">
+                <div class="text-muted text-xs d-flex align-items-center gap-1">
+                    <i class="fa-solid fa-tag"></i>
+                    <span>หัวข้อดีล / ชื่อสินค้า</span>
+                </div>
+                <div class="text-base font-bold">{{ deal.Title }}</div>
+            </div>
+
+            <div class="d-flex flex-column gap-2 bg-secondary rounded-3 p-3">
+                <div class="text-muted text-xs d-flex align-items-center gap-1">
+                    <i class="fa-solid fa-money-bill-wave text-success"></i>
+                    <span>จำนวนเงิน (บาท)</span>
+                </div>
+                <div class="text-base font-bold text-success">{{ deal.Amount | number:'1.2-2' }} บาท</div>
+            </div>
+
+            <div class="d-flex flex-column gap-2 bg-secondary rounded-3 p-3" style="grid-column: span 2;">
+                <div class="text-muted text-xs d-flex align-items-center gap-1">
+                    <i class="fa-solid fa-align-left"></i>
+                    <span>รายละเอียดสินค้า</span>
+                </div>
+                <div class="text-base text-break">{{ deal.Description || 'ไม่มีรายละเอียดเพิ่มเติม' }}</div>
+            </div>
+
+            <div class="d-flex flex-column gap-2 bg-secondary rounded-3 p-3">
+                <div class="text-muted text-xs d-flex align-items-center gap-1">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <span>ผู้ขาย (Seller)</span>
+                </div>
+                <div class="text-base">{{ deal.SellerName }}</div>
+            </div>
+
+            <div class="d-flex flex-column gap-2 bg-secondary rounded-3 p-3">
+                <div class="text-muted text-xs d-flex align-items-center gap-1">
+                    <i class="fa-solid fa-user"></i>
+                    <span>ผู้ซื้อ (Buyer)</span>
+                </div>
+                <div class="text-base">{{ deal.BuyerName }}</div>
+            </div>
+
+            @if (deal.SlipImageBase64) {
+            <div class="rounded-3 d-flex justify-content-between align-items-center mt-2" style="grid-column: span 2;">
+                <div class="d-flex gap-2 text-base align-items-center font-bold text-muted">
+                    <i class="fa-regular fa-file-image text-primary"></i>
+                    <span>หลักฐานการโอนเงิน (สลิป)</span>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column gap-2 bg-secondary rounded-3 p-3 text-center" style="grid-column: span 2;">
+                <div class="d-inline-block m-auto border rounded p-1 bg-white shadow-xs" style="max-width: 300px;">
+                    <img [src]="deal.SlipImageBase64" class="img-fluid rounded" alt="Payment Slip" style="max-height: 400px; object-fit: contain;">
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+    <div class="dialog-footer w-100 d-flex justify-content-between align-items-center">
+        <div class="d-flex gap-2">
+            <!-- แสดงปุ่มยืนยันชำระเงินเมื่อ ดีลอยู่ในสถานะ WAITING_PAYMENT และผู้ซื้อได้แนบหลักฐาน (SlipUrl) แล้ว -->
+            @if (deal.Status === DealStatus.WAITING_PAYMENT && deal.SlipUrl) {
+            <button class="btn btn-success" (click)="confirmPayment()">
+                <i class="fa-solid fa-check me-1"></i>
+                ยืนยันยอดเงินเข้า Escrow
+            </button>
+            }
+        </div>
+        <button class="swal2-cancel" (click)="close()">ปิด</button>
+    </div>
+</div>

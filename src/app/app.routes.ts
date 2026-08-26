@@ -9,6 +9,7 @@ import { ChangePassword } from './pages/auth/change-password/change-password';
 import { DeleteAccount } from './pages/auth/delete-account/delete-account';
 import { ChatRoom } from './pages/chat-room/chat-room';
 import { ManageSellers } from './pages/admin/manage-sellers/manage-sellers';
+import { ManageDeals } from './pages/admin/manage-deals/manage-deals';
 import { AdminGuard, AuthGuard } from './core/Auth';
 
 export const routes: Routes = [
@@ -82,7 +83,7 @@ export const routes: Routes = [
     {
         title: 'SafeTrade - Admin Deals',
         path: 'admin/deals',
-        component: Home,
+        component: ManageDeals,
         canActivate: [AuthGuard, AdminGuard]
     },
     {

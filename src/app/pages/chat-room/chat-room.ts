@@ -2,14 +2,18 @@ import { Component, OnInit, OnDestroy, NgZone, AfterViewInit } from '@angular/co
 import { BaseComponent } from '../../core/BaseComponent';
 import { SocketService } from '../../API/SocketService';
 import { ChatAppService } from '../../API/ChatAppService';
+import { DealAppService } from '../../API/DealAppService';
 import { MessageRequestData } from '../../types/MessageRequestData';
 import { MessageData } from '../../types/MessageData';
 import { SendMessagesRequest } from '../../types/SendMessagesRequest';
-import { MessageContentType } from '../../types/Enum';
+import { MessageContentType, UserRole } from '../../types/Enum';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ReadMessagesRequest } from '../../types/ReadMessagesRequest';
 import { CommonModule } from '@angular/common';
+import { CreateDealDialog } from '../../component/dialog/create-deal-dialog/create-deal-dialog';
+import { CreateDealRequest } from '../../types/CreateDealRequest';
+import { ActiveDealData } from '../../types/MessageDataList';
 
 @Component({
   selector: 'app-chat-room',
@@ -23,10 +27,14 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
   HasMore: boolean = false;
   CurrentUserName: string = '';
   OtherUserName: string = '';
+  OtherUserId = '';
   newMessage = '';
+  UserRole = UserRole;
+  ActiveDeal: ActiveDealData | null = null;
 
   constructor(private SocketService: SocketService,
-    private ChatAppService: ChatAppService) {
+    private ChatAppService: ChatAppService,
+    private DealAppService: DealAppService) {
     super();
   }
 
@@ -83,6 +91,8 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
       this.HasMore = result.HasMore;
       this.CurrentUserName = result.CurrentUserName;
       this.OtherUserName = result.OtherUserName;
+      this.OtherUserId = result.OtherUserId || '';
+      this.ActiveDeal = result.ActiveDeal || null;
       this.RefreshDetectChanges();
       setTimeout(() => {
         this.scrollToBottom();
@@ -155,6 +165,47 @@ export class ChatRoom extends BaseComponent implements OnInit, OnDestroy {
       await this.ChatAppService.MarkAsRead(request);
     } catch (err: HttpErrorResponse | any) {
       this.SwalError('เกิดข้อผิดพลาด', err.error?.message || err.message || 'เกิดข้อผิดพลาดในการทำเครื่องหมายข้อความว่าอ่านแล้ว');
+    }
+  }
+
+  OpenCreateDealDialog() {
+    const dialogRef = this.DialogService.open(CreateDealDialog, {
+      data: {
+        chatRoomId: this.ChatRoomId,
+        buyerId: this.OtherUserId,
+        sellerId: this.AppStateService.userId()
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(async (result: CreateDealRequest | undefined) => {
+      if (result) {
+        try {
+          this.ShowLoading();
+          await this.DealAppService.CreateDeal(result);
+          this.HideLoading();
+          this.SwalSuccess('สำเร็จ', 'สร้างดีลสำเร็จ');
+          this.LoadMessages();
+        } catch (error: any) {
+          this.HideLoading();
+          this.SwalError('เกิดข้อผิดพลาด', error.error?.message || error.message || 'ไม่สามารถสร้างดีลได้');
+        }
+      }
+    });
+  }
+
+  async UploadSlip(event: any) {
+    const file = event.target.files?.[0];
+    if (!file || !this.ActiveDeal) return;
+
+    try {
+      this.ShowLoading();
+      await this.DealAppService.UploadPaymentSlip(this.ActiveDeal.Id, file);
+      this.HideLoading();
+      this.SwalSuccess('สำเร็จ', 'อัปโหลดหลักฐานการโอนเงินสำเร็จ');
+      this.LoadMessages();
+    } catch (err: any) {
+      this.HideLoading();
+      this.SwalError('เกิดข้อผิดพลาด', err.error?.message || err.message || 'ไม่สามารถอัปโหลดหลักฐานได้');
     }
   }
 }

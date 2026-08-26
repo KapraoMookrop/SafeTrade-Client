@@ -3,22 +3,24 @@ import { CommonModule } from '@angular/common';
 import { BaseComponent } from '../../../core/BaseComponent';
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { DropDownData } from '../../../types/DropDownData';
-import { CoreAppService } from '../../../API/CoreAppService';
+import { CreateDealRequest } from '../../../types/CreateDealRequest';
+import { DealStatus } from '../../../types/Enum';
 
 @Component({
     selector: 'app-create-deal-dialog',
-    imports: [FormsModule, CommonModule, NgSelectModule],
+    imports: [FormsModule, CommonModule],
     providers: [],
     templateUrl: './create-deal-dialog.html',
 })
 export class CreateDealDialog extends BaseComponent {
-    UserId: string = '';
-    Users: DropDownData[] = [];
-    constructor(private dialogRef: MatDialogRef<CreateDealDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: any,
-        private CoreAppService: CoreAppService) {
+    title: string = '';
+    description: string = '';
+    amount: number | null = null;
+
+    constructor(
+        private dialogRef: MatDialogRef<CreateDealDialog>,
+        @Inject(MAT_DIALOG_DATA) public data: { chatRoomId: string; buyerId: string; sellerId: string }
+    ) {
         super();
     }
 
@@ -27,30 +29,25 @@ export class CreateDealDialog extends BaseComponent {
     }
 
     submit() {
-        this.dialogRef.close({
-            userId: this.UserId
-        });
-    }
-
-    async FindUsers(event: { term: string; items: any[] }) {
-        const term = event.term?.toLowerCase();
-
-        if (!term || term.length < 2) return;
-
-        const local = this.Users.filter(user => user.DisplayText.toLowerCase().includes(term));
-
-        if (local.length > 0) {
-            this.Users = local;
+        if (!this.title.trim()) {
+            this.SwalError('ข้อผิดพลาด', 'กรุณากรอกหัวข้อดีล/ชื่อสินค้า');
+            return;
+        }
+        if (this.amount === null || this.amount <= 0) {
+            this.SwalError('ข้อผิดพลาด', 'กรุณากรอกจำนวนเงินให้ถูกต้อง');
             return;
         }
 
-        try {
-            const result = await this.CoreAppService.FindUsers(term);
-            this.Users = result;
-        } catch (error) {
-            this.SwalError("เกิดข้อผิดพลาด", "ไม่สามารถค้นหาผู้ใช้ได้ในขณะนี้");
-        }
+        const request: CreateDealRequest = {
+            ChatRoomId: this.data.chatRoomId,
+            BuyerId: this.data.buyerId,
+            SellerId: this.data.sellerId,
+            Title: this.title,
+            Description: this.description,
+            Amount: this.amount,
+            Status: DealStatus.WAITING_PAYMENT
+        };
 
-        this.RefreshDetectChanges();
+        this.dialogRef.close(request);
     }
 }

@@ -42,11 +42,91 @@
                 </div>
             </div>
             }
+
+            <!-- ดีลที่กำลังคุย/ดำเนินการ -->
+            @if (ActiveDeal) {
+            <div class="card my-4 border-success bg-light shadow-sm">
+                <div class="card-header bg-success text-white d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-handshake text-xl"></i>
+                    <span class="font-bold text-lg">ดีลการค้าขายได้รับการสร้างแล้ว</span>
+                </div>
+                <div class="card-body text-dark">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="text-xl font-bold mb-1">{{ ActiveDeal.Title }}</h4>
+                            <p class="text-muted text-base mb-2">{{ ActiveDeal.Description || 'ไม่มีรายละเอียดเพิ่มเติม'
+                                }}</p>
+                            <div class="text-lg">
+                                ยอดเงิน: <span class="font-bold text-success">{{ ActiveDeal.Amount | number:'1.2-2' }}
+                                    บาท</span>
+                            </div>
+                            <!-- <div class="mt-2 text-base">
+                                สถานะดีล: <span class="badge bg-warning text-dark font-medium">{{ ActiveDeal.Status }}</span>
+                            </div> -->
+                        </div>
+                        <div class="col-md-4 text-end mt-3 mt-md-0">
+                            <!-- กรณีผู้ซื้อ: โชว์ให้อัปโหลดหลักฐานการโอนเงิน -->
+                            @if (this.AppStateService.user()?.Role === UserRole.BUYER) {
+                            @if (!ActiveDeal.SlipUrl) {
+                            <div class="d-flex flex-column align-items-end gap-2">
+                                <div class="text-danger text-base font-bold">กรุณาชำระเงินและอัปโหลดหลักฐาน</div>
+                                <button class="btn btn-outline-success d-flex align-items-center gap-2"
+                                    (click)="slipInput.click()">
+                                    <i class="fa-solid fa-upload"></i> อัปโหลดสลิป
+                                </button>
+                                <input #slipInput type="file" class="d-none" accept="image/*"
+                                    (change)="UploadSlip($event)" />
+                            </div>
+                            } @else {
+                            <div class="d-flex flex-column align-items-end gap-2">
+                                <span class="badge bg-success text-base p-2">คุณได้อัปโหลดหลักฐานแล้ว</span>
+                                <div class="text-muted text-xs">รอการตรวจสอบ</div>
+                            </div>
+                            }
+                            } @else if (this.AppStateService.user()?.Role === UserRole.SELLER) {
+                            <!-- กรณีผู้ขาย -->
+                            @if (!ActiveDeal.SlipUrl) {
+                            <div class="text-muted text-base font-medium">รอผู้ซื้อชำระเงินและอัปโหลดหลักฐาน...</div>
+                            } @else {
+                            <div class="d-flex flex-column align-items-end gap-2">
+                                <span class="badge bg-success text-base p-2">ผู้ซื้ออัปโหลดหลักฐานแล้ว</span>
+                                @if (ActiveDeal.PaymentStatus == 'CONFIRMED') {
+                                <span class="text-muted text-xs">ได้รับการยืนยันการชำระเงินแล้ว</span>
+                                } @else {
+                                <div class="text-muted text-xs">รอการตรวจสอบจากระบบ</div>
+                                }
+                            </div>
+                            }
+                            }
+                        </div>
+                    </div>
+
+                    <!-- หากผู้ซื้ออัปโหลดหลักฐาน (สลิป) แล้ว ให้แสดงรูปภาพจาก Drive -->
+                    @if (ActiveDeal.SlipImageBase64) {
+                    <hr class="my-3" />
+                    <div class="mt-3 text-start">
+                        <div class="text-base font-bold text-muted mb-2"><i class="fa-regular fa-image me-1"></i>
+                            หลักฐานการโอนเงินที่ส่งแล้ว:</div>
+                        <div class="d-inline-block border rounded p-1 bg-white shadow-xs" style="max-width: 250px;">
+                            <img [src]="ActiveDeal.SlipImageBase64" class="img-fluid rounded" alt="Payment Slip"
+                                style="max-height: 350px; object-fit: contain;" />
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
         </div>
     </div>
 </div>
 <div class="chat-input">
     <div class="container-md d-flex gap-3">
+        @if (this.AppStateService.user()?.Role === UserRole.SELLER) {
+        <button class="btn btn-success d-flex justify-content-center align-items-center text-nowrap"
+            (click)="OpenCreateDealDialog()">
+            <i class="fa-solid fa-handshake me-2"></i> สร้างดีล
+        </button>
+        }
         <input class="form-control" [(ngModel)]="newMessage" placeholder="พิมพ์ข้อความ..." />
         <button class="btn btn-primary d-flex justify-content-center align-items-center" (click)="SendMessage()">
             <i class="fa-solid fa-paper-plane"></i>

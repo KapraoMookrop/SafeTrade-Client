@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { CreateChatRoomRequest } from '../types/CreateChatRoomRequest';
+import { CreateDealRequest } from '../types/CreateDealRequest';
 
 @Injectable({
     providedIn: 'root'
@@ -37,5 +38,26 @@ export class DealAppService {
         );
         const response = await lastValueFrom(observable);
         return response;
+    }
+
+    async CreateDeal(request: CreateDealRequest): Promise<string> {
+        const observable = this.http.post<string>(
+            `${this.baseUrl}/deal/CreateDeal`,
+            request
+        );
+        const response = await lastValueFrom(observable);
+        return response;
+    }
+
+    async UploadPaymentSlip(dealId: string, slipFile: File): Promise<{ success: boolean; paymentId: string }> {
+        const formData = new FormData();
+        formData.append('dealId', dealId);
+        formData.append('SlipImage', slipFile);
+
+        const observable = this.http.post<{ success: boolean; paymentId: string }>(
+            `${this.baseUrl}/deal/UploadPaymentSlip`,
+            formData
+        );
+        return await lastValueFrom(observable);
     }
 }
